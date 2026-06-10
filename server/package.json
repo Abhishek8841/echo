@@ -12,11 +12,13 @@
   "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/cookie": "^0.6.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.9.2",
     "@types/pg": "^8.20.0",
+    "@types/ws": "^8.18.1",
     "express": "^5.2.1",
     "prisma": "^7.8.0",
     "tsx": "^4.22.4",
@@ -26,10 +28,12 @@
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "bcrypt": "^6.0.0",
+    "cookie": "^1.1.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.21.0",
+    "ws": "^8.21.0",
     "zod": "^4.4.3"
   }
 }
