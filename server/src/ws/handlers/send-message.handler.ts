@@ -4,6 +4,7 @@ import type { serverMessageType } from "../schemas/server-message.schema.js"
 import { getUserSockets } from "../socket-manager.js"
 
 export const sendMessage = async (senderId: string, msg: clientMessageType): Promise<void> => {
+    console.log("send-message1");
     const newMsg = await prisma.message.create(
         {
             data: {
@@ -13,6 +14,7 @@ export const sendMessage = async (senderId: string, msg: clientMessageType): Pro
             }
         }
     )
+    console.log("send-message2");
 
     const sockets = getUserSockets(newMsg.receiverId);
     for (const socket of sockets ?? []) {
@@ -25,6 +27,7 @@ export const sendMessage = async (senderId: string, msg: clientMessageType): Pro
                 createdAt: newMsg.createdAt,
             }
         };
+        console.log("send-message3");
         socket.send(JSON.stringify(serverMessage));
     }
 }

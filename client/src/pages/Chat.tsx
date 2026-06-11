@@ -35,10 +35,6 @@ const Chat = () => {
     // websocket connection
     useEffect(() => {
         connect();
-        return () => { disconnect(); }
-    }, [])
-
-    useEffect(() => {
         const socket = getSocket();
         if (!socket)
             return;
@@ -49,6 +45,8 @@ const Chat = () => {
                 msg.payload
             ]);
         }
+        return () => { disconnect(); }
+
     }, []);
 
     return (

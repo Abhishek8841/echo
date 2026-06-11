@@ -19,13 +19,18 @@ export const initWebsockets = (server: Server) => {
 
         ws.on("message", async (msg) => {
             try {
+                console.log(msg.toString());
                 const result = clientMessageSchema.safeParse(JSON.parse(msg.toString()));
+                console.log("ws.ts");
                 if (!result.success) return;
+                console.log("ws.ts");
                 const data = result.data;
                 const handler = handlers[data.type];
                 if (handler)
                     await handler(id, data);
+                console.log("ws.ts");
             } catch (e) {
+                console.log("ws.ts");
                 console.error(e);
             }
         })

@@ -3,7 +3,7 @@ import z from "zod";
 export const clientMessageSchema = z.object({
     type: z.literal("send_message"),
     payload: z.object({
-        to: z.string().uuid(),
+        to: z.string(),
         content: z.string().trim().min(1),
     })
 })

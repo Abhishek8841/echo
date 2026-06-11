@@ -31,7 +31,9 @@ export const getMessageList = async (req: Request, res: Response) => {
 export const getUserList = async (req: Request, res: Response) => {
     try {
         const id = req.id;
+        console.log(34);
         if (!id) throw new Error("User doesn't exist");
+        console.log(36);
         const { users } = await userListService(id);
         return res.json({
             success: true,
@@ -39,6 +41,7 @@ export const getUserList = async (req: Request, res: Response) => {
             users
         })
     } catch (e) {
+        console.log(44);
         return res.status(400).json(
             {
                 success: false,

@@ -3,8 +3,10 @@ import { jwtAuthService } from "../services/auth.services.js";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        console.log(6);
         const token = req.cookies.token;
         if (!token) {
+            console.log(9);
             throw new Error("Unauthorized");
         }
         const id = await jwtAuthService(token);
@@ -12,6 +14,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         next();
 
     } catch (e) {
+        console.log(16);
         res.status(400).json({
             success: false,
             message: e instanceof Error ? e.message : "Internal server error",

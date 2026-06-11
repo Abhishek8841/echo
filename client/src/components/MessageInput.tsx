@@ -20,18 +20,22 @@ const MessageInput = ({ opened, setMessages }: {
     async function submitHandler(e: React.FormEvent<HTMLFormElement>
     ) {
         e.preventDefault();
+        console.log("hell");
         if (!opened)
+        {
+            console.log("hell2");
             return;
+        }
         try {
+            console.log("hell3");
             sendMessage(
                 opened,
                 formData.content
             );
 
         } catch (e) {
-            console.log(e);
+            console.log("error");
         }
-
         setFormData({
             content: ""
         });

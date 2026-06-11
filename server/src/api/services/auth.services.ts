@@ -68,12 +68,12 @@ export const meService = async (id: string) => {
             }
         }
     )
-    if (!user) throw new Error("User doesn't exist");
+    if (!user) { console.log("71"); throw new Error("User doesn't exist") };
     return { user };
 }
 
 export const jwtAuthService = (token: string) => {
     const payload = jwt.verify(token, env.TOKEN_SECRET);
-    if (typeof payload == "string" || !payload.id) throw new Error("Invalid request");
+    if (typeof payload == "string" || !payload.id) { throw new Error("Invalid request"), console.log(77) };
     return payload.id;
 }
