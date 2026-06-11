@@ -4,4 +4,4 @@ import { getMessageList, getUserList } from "../controller/conversation.controll
 export const router2 = express.Router();
 
 router2.get("/users", getMessageList);
-router2.get("messages/:id", getUserList);
+router2.get("/messages/:id", getUserList); 

@@ -5,7 +5,7 @@ import { userIdSchema } from "../schema/conversation.schema.js";
 export const getMessageList = async (req: Request, res: Response) => {
     try {
         const result = userIdSchema.safeParse(req.params);
-        if (!result.success) return res.json({
+        if (!result.success) return res.status(400).json({
             success: false,
             message: "Invalid user params",
         })
@@ -19,7 +19,7 @@ export const getMessageList = async (req: Request, res: Response) => {
             messages
         })
     } catch (e) {
-        return res.json(
+        return res.status(400).json(
             {
                 success: false,
                 message: e instanceof Error ? e.message : "Internal server error",
@@ -39,7 +39,7 @@ export const getUserList = async (req: Request, res: Response) => {
             users
         })
     } catch (e) {
-        return res.json(
+        return res.status(400).json(
             {
                 success: false,
                 message: e instanceof Error ? e.message : "Internal server error",

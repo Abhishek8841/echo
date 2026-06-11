@@ -12,7 +12,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         next();
 
     } catch (e) {
-        res.json({
+        res.status(400).json({
             success: false,
             message: e instanceof Error ? e.message : "Internal server error",
         })

@@ -26,7 +26,7 @@ export const signUpController = async (req: Request, res: Response) => {
             }
         )
     } catch (e: any) {
-        return res.json(
+        return res.status(400).json(
             {
                 success: false,
                 message: e instanceof Error ? e.message : "Internal Server Error",
@@ -60,7 +60,7 @@ export const signInController = async (req: Request, res: Response) => {
             }
         )
     } catch (e: any) {
-        return res.json(
+        return res.status(400).json(
             {
                 success: false,
                 message: e instanceof Error ? e.message : "Internal Server Error",
@@ -80,7 +80,7 @@ export const meController = async (req: Request, res: Response) => {
             user
         })
     } catch (e) {
-        return res.json({
+        return res.status(400).json({
             success: false,
             message: e instanceof Error ? e.message : "Internal server Error"
         })

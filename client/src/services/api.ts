@@ -1,0 +1,43 @@
+import axios from "axios";
+import type { SignInBody, SignUpBody } from "../types/auth.types";
+
+export const api = axios.create(
+    {
+        baseURL: "http://localhost:3000/api/v1",
+        withCredentials: true,
+    }
+);
+
+export async function signIn({ email, password }: SignInBody) {
+    const response = await api.post('/signin', {
+        email, password
+    })
+    return response.data;
+}
+
+export async function signUp({ email, password }: SignUpBody) {
+    const response = await api.post("/signup", {
+        email, password,
+    });
+    return response.data;
+}
+
+export async function getCurrentUser() {
+    const response = await api.get("/me");
+    return response.data.user;
+}
+
+export async function logout() {
+    const response = await api.post("/logout");
+    return response.data;
+}
+
+export async function getUsers() {
+    const response = await api.get("/users");
+    return response.data.users;
+}
+
+export async function getMessages(userId: string) {
+    const response = await api.get(`/messages/${userId}`);
+    return response.data.messages;
+}
