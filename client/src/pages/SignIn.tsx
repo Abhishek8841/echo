@@ -6,15 +6,19 @@ import axios from 'axios';
 
 const SignIn = () => {
     const navigate = useNavigate();
+
     useEffect(() => {
         getCurrentUser().then(() => navigate("/chat")).catch(() => { });
-    },[])
+    }, [])
+
     const [formData, setFormData] = useState<SignInBody>({
         email: "",
         password: "",
     });
+
     function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
         const { value, name } = e.target;
+
         setFormData((prev) => {
             return {
                 ...prev,
@@ -22,13 +26,16 @@ const SignIn = () => {
             }
         });
     }
+
     async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
         try {
             await signIn(formData);
             navigate("/chat")
         } catch (e) {
             console.error(e);
+
             if (axios.isAxiosError(e)) {
                 alert(e.response?.data.message)
             };
@@ -39,40 +46,62 @@ const SignIn = () => {
             })
         }
     }
-    return (
-        <div>
-            <form onSubmit={submitHandler}>
 
-                <label>
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-slate-100">
+
+            <form
+                onSubmit={submitHandler}
+                className="bg-white p-8 rounded-2xl shadow-lg w-[350px] flex flex-col gap-5"
+            >
+
+                <h1 className="text-3xl font-bold text-center">
+                    Sign In
+                </h1>
+
+                <label className="flex flex-col gap-2">
+
+                    <span className="font-medium">
+                        Email
+                    </span>
+
                     <input
                         type='text'
                         name='email'
                         value={formData.email}
                         placeholder='john@gmail.com'
                         onChange={changeHandler}
-                    ></input>
-                    EMAIL
+                        className="border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+
                 </label>
 
-                <br />
+                <label className="flex flex-col gap-2">
 
-                <label>
+                    <span className="font-medium">
+                        Password
+                    </span>
+
                     <input
                         type='password'
                         name='password'
                         value={formData.password}
                         placeholder='secret'
                         onChange={changeHandler}
-                    ></input>
-                    PASSWORD
+                        className="border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+
                 </label>
 
-                <br />
-
-                <button>SUBMIT</button>
+                <button
+                    className="bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+                >
+                    SUBMIT
+                </button>
 
             </form>
-        </div >
+
+        </div>
     )
 }
 
