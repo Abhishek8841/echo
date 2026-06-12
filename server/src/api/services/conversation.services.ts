@@ -35,18 +35,6 @@ export const MessageListService = async (id1: string, id2: string) => {
             createdAt: true,
             senderId: true,
             receiverId: true,
-            sender: {
-                select: {
-                    id: true,
-                    email: true
-                }
-            },
-            receiver: {
-                select: {
-                    id: true,
-                    email: true
-                }
-            }
         },
         orderBy: {
             createdAt: "asc",

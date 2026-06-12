@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Sidebar from '../components/Sidebar';
 import MessageList from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
@@ -12,14 +12,16 @@ import { connect, disconnect, getSocket } from '../services/websocket';
 const Chat = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<UserType | null>(null);
-    const [opened, setOpened] = useState<string | null>(null);
+    const [opened, setOpened] = useState<UserType | null>(null);
     const [userList, setUserList] = useState<UserType[]>([]);
     const [messages, setMessages] = useState<MessagesType>([]);
+    const openedRef = useRef<UserType | null>(null);
+    openedRef.current = opened;
 
     // user
     useEffect(() => {
         getCurrentUser().then(setUser).catch(() => navigate("/signin"));
-    }, [])
+    }, [navigate])
 
     // userList
     useEffect(() => {
@@ -28,8 +30,10 @@ const Chat = () => {
 
     // messages
     useEffect(() => {
-        if (opened)
-            getMessages(opened).then(setMessages).catch(() => { alert("Not able to load the message") })
+        if (!opened) return;
+        const controller = new AbortController();
+        getMessages(opened.id, controller.signal).then(setMessages).catch(() => { if (controller.signal.aborted) return; alert("Unable to load the conversation") })
+        return () => { controller.abort() };
     }, [opened])
 
     // websocket connection
@@ -40,21 +44,21 @@ const Chat = () => {
             return;
         socket.onmessage = (event) => {
             const msg = JSON.parse(event.data);
-            setMessages(prev => [
-                ...prev,
-                msg.payload
-            ]);
+            if (msg.payload.senderId === openedRef.current?.id)
+                setMessages(prev => [
+                    ...prev,
+                    msg.payload
+                ]);
         }
         return () => { disconnect(); }
-
     }, []);
 
     return (
         <div>
             <Navbar user={user}></Navbar>
             <Sidebar userList={userList} setOpened={setOpened}></Sidebar>
-            <MessageList messages={messages}></MessageList>
-            <MessageInput opened={opened} setMessages={setMessages}></MessageInput>
+            <MessageList messages={messages} user={user} opened={opened}></MessageList>
+            <MessageInput user={user} opened={opened} setMessages={setMessages}></MessageInput>
         </div>
     )
 }

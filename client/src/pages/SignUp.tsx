@@ -8,7 +8,7 @@ const SignUp = () => {
     const navigate = useNavigate();
     useEffect(() => {
         getCurrentUser().then(() => navigate("/chat")).catch(() => { });
-    },[])
+    }, [])
     const [formData, setFormData] = useState<SignUpBody>({
         email: "",
         password: "",

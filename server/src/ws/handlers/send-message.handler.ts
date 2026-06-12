@@ -22,7 +22,8 @@ export const sendMessage = async (senderId: string, msg: clientMessageType): Pro
             type: "receive_message",
             payload: {
                 id: newMsg.id,
-                from: senderId,
+                senderId: senderId,
+                recieverId: msg.payload.to,
                 content: newMsg.content,
                 createdAt: newMsg.createdAt,
             }

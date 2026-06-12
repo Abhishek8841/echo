@@ -37,7 +37,7 @@ export async function getUsers() {
     return response.data.users;
 }
 
-export async function getMessages(userId: string) {
-    const response = await api.get(`/messages/${userId}`);
+export async function getMessages(userId: string, signal?: AbortSignal) {
+    const response = await api.get(`/messages/${userId}`,{signal});
     return response.data.messages;
 }
