@@ -1,9 +1,9 @@
 import { prisma } from "../../lib/prisma.js"
-import type { clientMessageType } from "../schemas/client-message.schema.js"
+import type { clientMessageType, sendMessageType } from "../schemas/client-message.schema.js"
 import type { serverMessageSchema, ServerMessageType } from "../schemas/server-message.schema.js"
 import { getUserSockets } from "../socket-manager.js"
 
-export const sendMessage = async (senderId: string, msg: clientMessageType): Promise<void> => {
+export const sendMessage = async (senderId: string, msg: sendMessageType): Promise<void> => {
 
     // console.log("send-message1");
     const newMsg = await prisma.message.create(

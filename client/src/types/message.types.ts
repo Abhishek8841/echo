@@ -30,7 +30,24 @@ export type OnlineList = {
     payload: string[],
 }
 
+export type startTypingType = {
+    type: "start_typing",
+    payload: {
+        from: string,
+    }
+}
+
+export type stopTypingType = {
+    type: "stop_typing",
+    payload: {
+        from: string;
+    }
+}
+
+
 export type serverMessageType =
     | recieveMessage
     | statusIndicatorType
     | OnlineList
+    | startTypingType
+    | stopTypingType

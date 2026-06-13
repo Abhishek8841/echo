@@ -1,19 +1,46 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { MessagesType } from "../types/message.types";
-import { sendMessage } from "../services/websocket";
+import { sendMessage, sendStartTyping, sendStopTyping } from "../services/websocket";
 import type { UserType } from "../types/auth.types";
 
-const MessageInput = ({ user, opened, setMessages }: {
-    user: UserType | null, opened: UserType | null, setMessages: React.Dispatch<React.SetStateAction<MessagesType>>
+const MessageInput = ({ user, opened, setMessages, setUserList }: {
+    user: UserType | null,
+    opened: UserType | null,
+    setMessages: React.Dispatch<React.SetStateAction<MessagesType>>,
+    setUserList: React.Dispatch<React.SetStateAction<UserType[]>>
 }) => {
     const [formData, setFormData] = useState({
         content: ""
     })
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const typingRef = useRef(false);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current)
+                clearTimeout(timeoutRef.current);
+        };
+    }, []);
 
     if (!opened || !user || !user.id) return (<></>);
 
     function changeHandler(e: any) {
+        if (!opened) return;
         const { name, value } = e.target;
+
+        if (!typingRef.current) {
+            sendStartTyping(opened?.id);
+            typingRef.current = true;
+        }
+
+        if (timeoutRef.current)
+            clearTimeout(timeoutRef.current);
+
+        timeoutRef.current = setTimeout(() => {
+            sendStopTyping(opened.id);
+            typingRef.current = false;
+
+        }, 1500);
 
         setFormData((prev) => {
             return {
@@ -25,19 +52,26 @@ const MessageInput = ({ user, opened, setMessages }: {
 
     async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
 
-        if (!opened || !user || !user.id) return (<></>);
-        
+        if (!opened || !user || !user.id) return;
+
         e.preventDefault();
 
-        console.log("hell");
+        // console.log("hell");
 
         if (!opened) {
-            console.log("hell2");
+            // console.log("hell2");
             return;
         }
 
+        if (typingRef.current) {
+            sendStopTyping(opened.id);
+            typingRef.current = false;
+            if (timeoutRef.current)
+                clearTimeout(timeoutRef.current);
+        }
+
         try {
-            console.log("hell3");
+            // console.log("hell3");
 
             sendMessage(
                 opened.id,
@@ -56,10 +90,21 @@ const MessageInput = ({ user, opened, setMessages }: {
                 return [...prev, newMessage]
             });
 
+            setUserList((prev) => {
+                let updatedUser = prev.filter(u => u.id == newMessage.receiverId);
+
+                return [
+                    ...updatedUser,
+                    ...prev.filter((p) => {
+                        return p.id !== updatedUser[0].id
+                    })
+                ]
+            })
+
+
         } catch (e) {
             console.log("error");
         }
-
         setFormData({
             content: ""
         });

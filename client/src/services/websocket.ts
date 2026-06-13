@@ -26,3 +26,29 @@ export function sendMessage(to: string, content: string) {
         )
     );
 }
+
+export function sendStartTyping(to: string) {
+    socket?.send(
+        JSON.stringify(
+            {
+                type: "start_typing",
+                payload: {
+                    to
+                }
+            }
+        )
+    )
+}
+
+export function sendStopTyping(to: string) {
+    socket?.send(
+        JSON.stringify(
+            {
+                type: "stop_typing",
+                payload: {
+                    to
+                }
+            }
+        )
+    )
+}

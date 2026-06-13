@@ -16,6 +16,7 @@ const Chat = () => {
     const [userList, setUserList] = useState<UserType[]>([]);
     const [messages, setMessages] = useState<MessagesType>([]);
     const [onlineList, setOnlineList] = useState<Set<string>>(new Set());
+    const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
     const openedRef = useRef<UserType | null>(null);
 
     openedRef.current = opened;
@@ -61,10 +62,20 @@ const Chat = () => {
             return;
 
         socket.onmessage = (event) => {
+
             try {
                 const msg: serverMessageType = JSON.parse(event.data);
                 switch (msg.type) {
                     case "recieve_message":
+                        setUserList((prev) => {
+                            let updatedUser = prev.filter(u => u.id == msg.payload.senderId);
+                            return [
+                                ...updatedUser,
+                                ...prev.filter((p) => {
+                                    return p.id !== updatedUser[0].id}
+                                )
+                            ]
+                        })
                         if (msg.payload.senderId === openedRef.current?.id)
                             setMessages(prev => [
                                 ...prev,
@@ -92,6 +103,22 @@ const Chat = () => {
                     case "online_list":
                         setOnlineList(new Set(msg.payload))
                         break;
+
+                    case "start_typing":
+                        setTypingUsers((prev) => {
+                            const newSet = new Set(prev);
+                            newSet.add(msg.payload.from);
+                            return newSet;
+                        })
+                        break;
+
+                    case "stop_typing":
+                        setTypingUsers((prev) => {
+                            const newSet = new Set(prev);
+                            newSet.delete(msg.payload.from);
+                            return newSet;
+                        })
+                        break;
                 }
             }
             catch (e) {
@@ -111,6 +138,7 @@ const Chat = () => {
                 user={user}
                 setOpened={setOpened}
                 opened={opened}
+                typingUsers={typingUsers}
             />
 
             <div className="flex flex-1 overflow-hidden">
@@ -130,6 +158,7 @@ const Chat = () => {
                     />
 
                     <MessageInput
+                        setUserList={setUserList}
                         user={user}
                         opened={opened}
                         setMessages={setMessages}

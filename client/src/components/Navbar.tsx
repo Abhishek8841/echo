@@ -2,8 +2,11 @@ import { useNavigate } from 'react-router-dom'
 import { logout } from '../services/api'
 import type { UserType } from '../types/auth.types'
 
-const Navbar = ({ user, setOpened, opened }: {
-    user: UserType | null, setOpened: React.Dispatch<React.SetStateAction<UserType | null>>, opened: UserType | null
+const Navbar = ({ user, setOpened, opened, typingUsers }: {
+    user: UserType | null,
+    setOpened: React.Dispatch<React.SetStateAction<UserType | null>>,
+    opened: UserType | null,
+    typingUsers: Set<string>
 }) => {
     const navigate = useNavigate();
     console.log("navbar rendered")
@@ -14,7 +17,6 @@ const Navbar = ({ user, setOpened, opened }: {
             <div className="font-medium text-lg">
                 {user ? user.email.split('@')[0] : ""}
             </div>
-
             <div className="flex gap-3 items-center">
 
                 {opened ?
@@ -22,7 +24,7 @@ const Navbar = ({ user, setOpened, opened }: {
                         className="bg-slate-600 hover:bg-slate-500 px-4 py-2 rounded-lg transition"
                         onClick={() => { setOpened(null) }}
                     >
-                        CLOSE CHAT
+                        {`CLOSE ${opened.email.split('@')[0]}'s CHAT`}
                     </button>
                     :
                     <></>
@@ -34,6 +36,16 @@ const Navbar = ({ user, setOpened, opened }: {
                 >
                     Logout
                 </button>
+
+                {
+                    opened?.id &&
+                        typingUsers.has(opened?.id || "") ?
+                        <div className='bg-slate-600 hover:bg-slate-500 px-4 py-2 rounded-lg transition'>
+                            {`${opened.email.split('@')[0]} is typing`}
+                        </div>
+                        :
+                        <div></div>
+                }
 
             </div>
 

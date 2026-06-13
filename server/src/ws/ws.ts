@@ -1,7 +1,7 @@
 import WebSocket, { WebSocketServer } from "ws"
 import { extractUserId } from "./utils/extract-user.js";
 import { addUser, broadCast, broadCastToEveryOneExcept, isUserOnline, onlineUsersList, removeUserSocket, sendToUser } from "./socket-manager.js";
-import { sendMessageSchema } from "./schemas/client-message.schema.js";
+import { clientMessageSchema } from "./schemas/client-message.schema.js";
 import { handlers } from "./routes/message.routes.js";
 import type { IncomingMessage, Server } from "http";
 import type { ServerMessageType } from "./schemas/server-message.schema.js";
@@ -40,27 +40,36 @@ export const initWebsockets = (server: Server) => {
         ws.on("message", async (msg) => {
             try {
                 console.log(msg.toString());
-                const result = sendMessageSchema.safeParse(JSON.parse(msg.toString()));
+                const result = clientMessageSchema.safeParse(JSON.parse(msg.toString()));
                 // console.log("ws.ts");
                 if (!result.success) return;
                 // console.log("ws.ts");
                 const data = result.data;
-                const handler = handlers[data.type];
-                if (handler)
-                    await handler(id, data);
+                switch (data.type) {
+                    case "send_message":
+                        await handlers[data.type](id, data);
+                        break;
+                    case "start_typing":
+                        handlers[data.type](id, data);
+                        break;
+                    case "stop_typing":
+                        handlers[data.type](id, data);
+                        break;
+                }
+
                 // console.log("ws.ts");
             } catch (e) {
                 // console.log("ws.ts");
                 console.error(e);
             }
         })
- 
+
         ws.on("close", () => {
-            
+
             removeUserSocket(id, ws);
 
             if (isUserOnline(id)) return;
-            
+
             const broadCastMessage: ServerMessageType = {
                 type: "status_indicator",
                 payload: {
@@ -68,9 +77,9 @@ export const initWebsockets = (server: Server) => {
                     content: "OFFLINE",
                 }
             };
-            
+
             broadCast(broadCastMessage);
-        
+
         })
 
     })

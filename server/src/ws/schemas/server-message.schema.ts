@@ -24,6 +24,29 @@ export const sendOnlineListSchema = z.object({
     payload: z.array(z.string())
 })
 
+export const serverStartTypingSchema = z.object(
+    {
+        type: z.literal("start_typing"),
+        payload: z.object(
+            {
+                from: z.string()
+            }
+        )
+    }
+)
+
+export const serverStopTypingSchema = z.object(
+    {
+        type: z.literal("stop_typing"),
+        payload: z.object(
+            {
+                from: z.string()
+            }
+        )
+    }
+)
+
+
 // export const serverMessageSchema = z.union([
 //     serverReceiveMessageSchema,
 //     sendStatusSchema
@@ -33,7 +56,9 @@ export const serverMessageSchema =
     z.discriminatedUnion("type", [
         serverReceiveMessageSchema,
         sendStatusSchema,
-        sendOnlineListSchema
+        sendOnlineListSchema,
+        serverStopTypingSchema,
+        serverStartTypingSchema
     ]);
 
 export type ServerMessageType =
