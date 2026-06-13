@@ -12,7 +12,7 @@ const Navbar = ({ user, setOpened, opened }: {
         <div className="h-16 bg-slate-800 text-white flex items-center justify-between px-6 shadow-md">
 
             <div className="font-medium text-lg">
-                {user ? user.email : ""}
+                {user ? user.email.split('@')[0] : ""}
             </div>
 
             <div className="flex gap-3 items-center">

@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const clientMessageSchema = z.object({
+export const sendMessageSchema = z.object({
     type: z.literal("send_message"),
     payload: z.object({
         to: z.string(),
@@ -8,4 +8,5 @@ export const clientMessageSchema = z.object({
     })
 })
 
-export type clientMessageType = z.infer<typeof clientMessageSchema>;
+
+export type clientMessageType = z.infer<typeof sendMessageSchema>;

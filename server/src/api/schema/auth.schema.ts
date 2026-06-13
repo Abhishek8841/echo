@@ -7,7 +7,7 @@ export const signUpSchema = z.object({
 
     password: z
         .string()
-        .min(8)
+        .min(4)
         .max(100),
 });
 
@@ -18,7 +18,7 @@ export const signInSchema = z.object({
 
     password: z
         .string()
-        .min(8)
+        .min(4)
         .max(100),
 })
 

@@ -1,10 +1,11 @@
 import { prisma } from "../../lib/prisma.js"
 import type { clientMessageType } from "../schemas/client-message.schema.js"
-import type { serverMessageType } from "../schemas/server-message.schema.js"
+import type { serverMessageSchema, ServerMessageType } from "../schemas/server-message.schema.js"
 import { getUserSockets } from "../socket-manager.js"
 
 export const sendMessage = async (senderId: string, msg: clientMessageType): Promise<void> => {
-    console.log("send-message1");
+
+    // console.log("send-message1");
     const newMsg = await prisma.message.create(
         {
             data: {
@@ -14,12 +15,12 @@ export const sendMessage = async (senderId: string, msg: clientMessageType): Pro
             }
         }
     )
-    console.log("send-message2");
 
+    // console.log("send-message2");
     const sockets = getUserSockets(newMsg.receiverId);
     for (const socket of sockets ?? []) {
-        const serverMessage: serverMessageType = {
-            type: "receive_message",
+        const serverMessage: ServerMessageType = {
+            type: "recieve_message",
             payload: {
                 id: newMsg.id,
                 senderId: senderId,
@@ -28,7 +29,8 @@ export const sendMessage = async (senderId: string, msg: clientMessageType): Pro
                 createdAt: newMsg.createdAt,
             }
         };
-        console.log("send-message3");
+
+        // console.log("send-message3");
         socket.send(JSON.stringify(serverMessage));
     }
 }
