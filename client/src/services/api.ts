@@ -38,6 +38,12 @@ export async function getUsers() {
 }
 
 export async function getMessages(userId: string, signal?: AbortSignal) {
-    const response = await api.get(`/messages/${userId}`,{signal});
+    const response = await api.get(`/messages/${userId}`, { signal });
     return response.data.messages;
+}
+
+export async function getUnreadList() {
+    console.log("inside api.ts");
+    const response = await api.get("/messages/unreadCount");
+    return response.data.unread;
 }

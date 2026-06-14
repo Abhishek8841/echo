@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Sidebar from '../components/Sidebar';
 import MessageList from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
-import { getCurrentUser, getMessages, getUsers } from '../services/api';
+import { getCurrentUser, getMessages, getUnreadList, getUsers } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import type { MessagesType, serverMessageType } from '../types/message.types';
 import type { UserType } from '../types/auth.types';
@@ -33,7 +33,11 @@ const Chat = () => {
             alert("Not able to load the users")
         })
     }, [])
-
+    useEffect(() => {
+        getUnreadList().then(setUnreadCount).catch(() => {
+            alert("Unable to load unread count")
+        })
+    }, [])
     // messages
     useEffect(() => {
         if (!opened) return;
@@ -131,13 +135,12 @@ const Chat = () => {
                         })
                         break;
                     case "recieve_read_receipt":
-                        if (msg.payload.from === opened?.id) {
+                        if (msg.payload.from === openedRef.current?.id) {
 
                             setMessages(prev =>
                                 prev.map(message => {
 
                                     if (
-                                        message.senderId === user?.id &&
                                         message.receiverId === msg.payload.from &&
                                         message.readAt === null
                                     ) {

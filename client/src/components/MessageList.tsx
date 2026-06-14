@@ -26,14 +26,29 @@ const MessageList = ({ messages, user, opened }: { messages: MessagesType, user:
                         <br />
 
                         <div className="text-sm opacity-80">
-                            {message.createdAt.toLocaleString()}
+                            {new Date(message.createdAt).toLocaleString("en-IN", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                                hour: "numeric",
+                                minute: "2-digit",
+                            })}
                         </div>
 
                         <br />
                         {
                             message.receiverId == opened.id
                                 ?
-                                (message.readAt == null) ? "delivered" : "read"
+                                (message.readAt == null) ?
+                                    "delivered"
+                                    :
+                                    `read at ${new Date(message.readAt).toLocaleString("en-IN", {
+                                        day: "numeric",
+                                        month: "short",
+                                        year: "numeric",
+                                        hour: "numeric",
+                                        minute: "2-digit",
+                                    })}`
                                 :
                                 <></>
                         }
