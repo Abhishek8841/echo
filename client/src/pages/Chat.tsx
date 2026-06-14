@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import type { MessagesType, serverMessageType } from '../types/message.types';
 import type { UserType } from '../types/auth.types';
 import Navbar from '../components/Navbar';
-import { connect, disconnect, getSocket } from '../services/websocket';
+import { connect, disconnect, getSocket, sendReadMessage } from '../services/websocket';
 
 const Chat = () => {
     const navigate = useNavigate();
@@ -72,15 +72,18 @@ const Chat = () => {
                             return [
                                 ...updatedUser,
                                 ...prev.filter((p) => {
-                                    return p.id !== updatedUser[0].id}
+                                    return p.id !== updatedUser[0].id
+                                }
                                 )
                             ]
                         })
-                        if (msg.payload.senderId === openedRef.current?.id)
+                        if (msg.payload.senderId === openedRef.current?.id) {
                             setMessages(prev => [
                                 ...prev,
                                 msg.payload
                             ]);
+                            sendReadMessage(openedRef.current.id)
+                        }
                         break;
 
                     case "status_indicator":
@@ -118,6 +121,28 @@ const Chat = () => {
                             newSet.delete(msg.payload.from);
                             return newSet;
                         })
+                        break;
+                    case "recieve_read_receipt":
+                        if (msg.payload.from === opened?.id) {
+
+                            setMessages(prev =>
+                                prev.map(message => {
+
+                                    if (
+                                        message.senderId === user?.id &&
+                                        message.receiverId === msg.payload.from &&
+                                        message.readAt === null
+                                    ) {
+                                        return {
+                                            ...message,
+                                            readAt: msg.payload.readAt
+                                        };
+                                    }
+
+                                    return message;
+                                })
+                            );
+                        }
                         break;
                 }
             }

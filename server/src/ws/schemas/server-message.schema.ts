@@ -10,7 +10,7 @@ export const serverReceiveMessageSchema = z.object({
         createdAt: z.date(),
     })
 })
- 
+
 export const sendStatusSchema = z.object({
     type: z.literal("status_indicator"),
     payload: z.object({
@@ -46,6 +46,19 @@ export const serverStopTypingSchema = z.object(
     }
 )
 
+export const readMessageSchema = z.object(
+    {
+        type: z.literal("recieve_read_receipt"),
+        payload: z.object(
+            {
+                from: z.string(),
+                readAt: z.date(),
+            }
+        )
+    }
+)
+
+
 
 // export const serverMessageSchema = z.union([
 //     serverReceiveMessageSchema,
@@ -58,7 +71,8 @@ export const serverMessageSchema =
         sendStatusSchema,
         sendOnlineListSchema,
         serverStopTypingSchema,
-        serverStartTypingSchema
+        serverStartTypingSchema,
+        readMessageSchema
     ]);
 
 export type ServerMessageType =

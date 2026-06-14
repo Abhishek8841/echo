@@ -30,7 +30,15 @@ const MessageList = ({ messages, user, opened }: { messages: MessagesType, user:
                         </div>
 
                         <br />
+                        {
+                            message.receiverId == opened.id
+                                ?
+                                (message.readAt == null) ? "delivered" : "read"
+                                :
+                                <></>
+                        }
 
+                        <br />
                         <div className="text-sm font-medium">
                             {message.senderId == user.id
                                 ? "sent by you"
@@ -41,7 +49,7 @@ const MessageList = ({ messages, user, opened }: { messages: MessagesType, user:
                 )
             })}
 
-        </div>
+        </div >
     )
 
 }

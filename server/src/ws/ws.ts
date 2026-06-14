@@ -55,6 +55,9 @@ export const initWebsockets = (server: Server) => {
                     case "stop_typing":
                         handlers[data.type](id, data);
                         break;
+                    case "send_read_receipt":
+                        handlers[data.type](id, data)
+                        break;
                 }
 
                 // console.log("ws.ts");

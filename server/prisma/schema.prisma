@@ -36,5 +36,6 @@ model Message {
   sender      User @relation("Sender", fields: [senderId], references: [id])
   receiver    User @relation("Receiver", fields: [receiverId], references: [id])
 
+  readAt DateTime?
   createdAt  DateTime @default(now())
 }

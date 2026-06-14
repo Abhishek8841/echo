@@ -30,9 +30,20 @@ export const clientStopTypingSchema = z.object(
     }
 )
 
+export const readMessageSchema = z.object(
+    {
+        type: z.literal("send_read_receipt"),
+        payload: z.object(
+            {
+                to: z.string()
+            }
+        )
+    }
+)
+
 export const clientMessageSchema = z.discriminatedUnion("type",
     [
-        sendMessageSchema, clientStartTypingSchema, clientStopTypingSchema,
+        sendMessageSchema, clientStartTypingSchema, clientStopTypingSchema, readMessageSchema
     ]
 )
 
@@ -40,3 +51,4 @@ export type sendMessageType = z.infer<typeof sendMessageSchema>;
 export type clientMessageType = z.infer<typeof clientMessageSchema>;
 export type clientStartTypingType = z.infer<typeof clientStartTypingSchema>;
 export type clientStopTypingType = z.infer<typeof clientStopTypingSchema>;
+export type clineReadMessageType = z.infer<typeof readMessageSchema>;

@@ -52,3 +52,16 @@ export function sendStopTyping(to: string) {
         )
     )
 }
+
+export function sendReadMessage(to: string) {
+    socket?.send(
+        JSON.stringify(
+            {
+                type: "send_read_receipt",
+                payload: {
+                    to
+                }
+            }
+        )
+    )
+}

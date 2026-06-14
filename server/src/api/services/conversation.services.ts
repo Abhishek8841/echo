@@ -35,6 +35,7 @@ export const MessageListService = async (id1: string, id2: string) => {
             createdAt: true,
             senderId: true,
             receiverId: true,
+            readAt: true,
         },
         orderBy: {
             createdAt: "asc",

@@ -1,5 +1,6 @@
 import React from 'react'
 import type { UserType } from '../types/auth.types'
+import { sendReadMessage } from '../services/websocket'
 
 const Sidebar = ({ userList, setOpened, onlineList }: {
   userList: UserType[],
@@ -15,7 +16,10 @@ const Sidebar = ({ userList, setOpened, onlineList }: {
       return (
         <div
           key={user.id}
-          onClick={() => setOpened(user)}
+          onClick={() => {
+            setOpened(user);
+            sendReadMessage(user.id);
+          }}
           className={onlineList.has(user.id) ? "border border-8 border-green-600 px-5 py-4 border-b cursor-pointer hover:bg-slate-100 transition" : "border border-8 border-red-500 px-5 py-4 border-b cursor-pointer hover:bg-slate-100 transition"}
         >
           {user.email.split('@')[0]}

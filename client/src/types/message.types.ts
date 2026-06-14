@@ -1,19 +1,21 @@
 export type MessagesType = {
-    id: string;
-    content: string;
-    senderId: string;
-    receiverId: string;
-    createdAt: Date;
+    id: string,
+    content: string,
+    senderId: string,
+    receiverId: string,
+    createdAt: Date,
+    readAt: Date | null
 }[]
 
 export type recieveMessage = {
     type: "recieve_message",
     payload: {
-        id: string;
-        content: string;
-        senderId: string;
-        receiverId: string;
-        createdAt: Date;
+        id: string,
+        content: string,
+        senderId: string,
+        receiverId: string,
+        createdAt: Date,
+        readAt: Date | null,
     }
 }
 
@@ -40,7 +42,15 @@ export type startTypingType = {
 export type stopTypingType = {
     type: "stop_typing",
     payload: {
-        from: string;
+        from: string,
+    }
+}
+
+export type readReceiptType = {
+    type: "recieve_read_receipt",
+    payload: {
+        from: string,
+        readAt: Date,
     }
 }
 
@@ -51,3 +61,4 @@ export type serverMessageType =
     | OnlineList
     | startTypingType
     | stopTypingType
+    | readReceiptType

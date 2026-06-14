@@ -84,6 +84,7 @@ const MessageInput = ({ user, opened, setMessages, setUserList }: {
                 senderId: user.id,
                 receiverId: opened.id,
                 createdAt: new Date(Date.now()),
+                readAt: null,
             };
 
             setMessages((prev) => {
