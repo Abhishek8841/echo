@@ -1,5 +1,5 @@
 import { type Request, type Response } from "express"
-import { MessageListService, userListService } from "../services/conversation.services.js";
+import { getUnreadCountService, MessageListService, userListService } from "../services/conversation.services.js";
 import { userIdSchema } from "../schema/conversation.schema.js";
 
 export const getMessageList = async (req: Request, res: Response) => {
@@ -42,6 +42,28 @@ export const getUserList = async (req: Request, res: Response) => {
         })
     } catch (e) {
         console.log(44);
+        return res.status(400).json(
+            {
+                success: false,
+                message: e instanceof Error ? e.message : "Internal server error",
+            }
+        )
+    }
+}
+
+export const getUnreadCount = async (req: Request, res: Response) => {
+    try {
+        const id = req.id;
+        if (!id) throw new Error("Invalid request");
+        const ans = await getUnreadCountService(id);
+        return res.json(
+            {
+                success: true,
+                message: "successfully fetched the unread count",
+                unread: ans
+            }
+        )
+    } catch (e) {
         return res.status(400).json(
             {
                 success: false,

@@ -17,6 +17,7 @@ const Chat = () => {
     const [messages, setMessages] = useState<MessagesType>([]);
     const [onlineList, setOnlineList] = useState<Set<string>>(new Set());
     const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
+    const [unreadCount, setUnreadCount] = useState<Record<string, number>>({})
     const openedRef = useRef<UserType | null>(null);
 
     openedRef.current = opened;
@@ -83,6 +84,13 @@ const Chat = () => {
                                 msg.payload
                             ]);
                             sendReadMessage(openedRef.current.id)
+                        }
+                        else {
+                            setUnreadCount(prev => ({
+                                ...prev,
+                                [msg.payload.senderId]:
+                                    (prev[msg.payload.senderId] || 0) + 1
+                            }));
                         }
                         break;
 
@@ -172,6 +180,8 @@ const Chat = () => {
                     userList={userList}
                     setOpened={setOpened}
                     onlineList={onlineList}
+                    unreadCount={unreadCount}
+                    setUnreadCount={setUnreadCount}
                 />
 
                 <div className="flex flex-col flex-1">

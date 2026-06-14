@@ -6,7 +6,7 @@ const Navbar = ({ user, setOpened, opened, typingUsers }: {
     user: UserType | null,
     setOpened: React.Dispatch<React.SetStateAction<UserType | null>>,
     opened: UserType | null,
-    typingUsers: Set<string>
+    typingUsers: Set<string>,
 }) => {
     const navigate = useNavigate();
     console.log("navbar rendered")

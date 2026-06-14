@@ -43,3 +43,21 @@ export const MessageListService = async (id1: string, id2: string) => {
     });
     return messages;
 }
+
+export const getUnreadCountService = async (id: string) => {
+    const result = await prisma.message.groupBy(
+        {
+            by: ["senderId"],
+            where: {
+                receiverId: id,
+                readAt: null,
+            },
+            _count: true,
+        }
+    )
+    const transform: Record<string, number> = {};
+    for (const ele of result) {
+        transform[ele.senderId] = ele._count;
+    }
+    return transform;
+}
