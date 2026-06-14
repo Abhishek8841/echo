@@ -54,8 +54,10 @@ export const getUserList = async (req: Request, res: Response) => {
 export const getUnreadCount = async (req: Request, res: Response) => {
     try {
         const id = req.id;
+        console.log("inside getUnreadCount")
         if (!id) throw new Error("Invalid request");
         const ans = await getUnreadCountService(id);
+        console.log(id + " getUnreadCount()");
         return res.json(
             {
                 success: true,
@@ -64,6 +66,7 @@ export const getUnreadCount = async (req: Request, res: Response) => {
             }
         )
     } catch (e) {
+        console.error(e);
         return res.status(400).json(
             {
                 success: false,
