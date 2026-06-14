@@ -30,11 +30,15 @@ const Sidebar = ({ userList, setOpened, onlineList, unreadCount, setUnreadCount 
         >
           {user.email.split('@')[0]}
           {
-            unreadCount[user.id] > 0 && <span>
-              {
-                unreadCount[user.id]
-              }
-            </span>
+            unreadCount[user.id] > 0 &&
+            <>
+              <br />
+              <span>
+                {
+                  unreadCount[user.id]
+                }
+              </span>
+            </>
           }
         </div>
       )
