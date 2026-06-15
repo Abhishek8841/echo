@@ -1,16 +1,16 @@
 import { useNavigate } from 'react-router-dom'
 import { logout } from '../services/api'
 import type { UserType } from '../types/auth.types'
+import { useAuth } from '../hooks/useAuth'
 
-const Navbar = ({ user, setOpened, opened, typingUsers }: {
-    user: UserType | null,
+const Navbar = ({ setOpened, opened, typingUsers }: {
     setOpened: React.Dispatch<React.SetStateAction<UserType | null>>,
     opened: UserType | null,
     typingUsers: Set<string>,
 }) => {
+    const { user } = useAuth();
     const navigate = useNavigate();
     console.log("navbar rendered")
-
     return (
         <div className="h-16 bg-slate-800 text-white flex items-center justify-between px-6 shadow-md">
 

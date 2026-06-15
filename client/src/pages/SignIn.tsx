@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import type { SignInBody } from '../types/auth.types';
-import { getCurrentUser, signIn } from '../services/api';
+import { signIn } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../hooks/useAuth';
 
 const SignIn = () => {
+    const { fetchUser } = useAuth();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        getCurrentUser().then(() => navigate("/chat")).catch(() => { });
-    }, [])
 
     const [formData, setFormData] = useState<SignInBody>({
         email: "",
@@ -32,6 +31,7 @@ const SignIn = () => {
 
         try {
             await signIn(formData);
+            await fetchUser();
             navigate("/chat")
         } catch (e) {
             console.error(e);

@@ -2,19 +2,16 @@ import { useEffect, useRef, useState } from 'react'
 import Sidebar from '../components/Sidebar';
 import MessageList from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
-import { getCurrentUser, getMessages, getUnreadList, getUsers } from '../services/api';
-import { useNavigate } from 'react-router-dom';
-import type { MessagesType, serverMessageType } from '../types/message.types';
+import { getUnreadList, getUsers } from '../services/api';
+import type { serverMessageType } from '../types/message.types';
 import type { UserType } from '../types/auth.types';
 import Navbar from '../components/Navbar';
-import { connect, disconnect, getSocket, sendReadMessage } from '../services/websocket';
+import { connect, disconnect, getSocket } from '../services/websocket';
+import useMessage from '../hooks/useMessage';
 
 const Chat = () => {
-    const navigate = useNavigate();
-    const [user, setUser] = useState<UserType | null>(null);
     const [opened, setOpened] = useState<UserType | null>(null);
     const [userList, setUserList] = useState<UserType[]>([]);
-    const [messages, setMessages] = useState<MessagesType>([]);
     const [onlineList, setOnlineList] = useState<Set<string>>(new Set());
     const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
     const [unreadCount, setUnreadCount] = useState<Record<string, number>>({})
@@ -22,10 +19,7 @@ const Chat = () => {
 
     openedRef.current = opened;
 
-    // user
-    useEffect(() => {
-        getCurrentUser().then(setUser).catch(() => navigate("/signin"));
-    }, [navigate])
+    const { messages, fetchMessages, appendMessage, abortMessages, appendAndMarkMessageAsRead, receieveRead } = useMessage();
 
     // userList
     useEffect(() => {
@@ -38,26 +32,16 @@ const Chat = () => {
             alert("Unable to load unread count")
         })
     }, [])
+
     // messages
     useEffect(() => {
         if (!opened) return;
 
-        const controller = new AbortController();
-
-        getMessages(opened.id, controller.signal)
-            .then(setMessages)
-            .catch(() => {
-                if (controller.signal.aborted) return;
-
-                alert("Unable to load the conversation")
-            })
-
-        return () => {
-            controller.abort()
-        };
+        fetchMessages(opened.id);
+        return () => { abortMessages() };
     }, [opened])
 
-    // websocket connection
+    // websocket connection 
     useEffect(() => {
         connect();
 
@@ -83,11 +67,7 @@ const Chat = () => {
                             ]
                         })
                         if (msg.payload.senderId === openedRef.current?.id) {
-                            setMessages(prev => [
-                                ...prev,
-                                msg.payload
-                            ]);
-                            sendReadMessage(openedRef.current.id)
+                            appendAndMarkMessageAsRead(msg.payload, openedRef.current.id);
                         }
                         else {
                             setUnreadCount(prev => ({
@@ -136,23 +116,7 @@ const Chat = () => {
                         break;
                     case "recieve_read_receipt":
                         if (msg.payload.from === openedRef.current?.id) {
-
-                            setMessages(prev =>
-                                prev.map(message => {
-
-                                    if (
-                                        message.receiverId === msg.payload.from &&
-                                        message.readAt === null
-                                    ) {
-                                        return {
-                                            ...message,
-                                            readAt: msg.payload.readAt
-                                        };
-                                    }
-
-                                    return message;
-                                })
-                            );
+                            receieveRead(msg);
                         }
                         break;
                 }
@@ -171,7 +135,6 @@ const Chat = () => {
         <div className="h-screen bg-slate-100 flex flex-col">
 
             <Navbar
-                user={user}
                 setOpened={setOpened}
                 opened={opened}
                 typingUsers={typingUsers}
@@ -191,15 +154,13 @@ const Chat = () => {
 
                     <MessageList
                         messages={messages}
-                        user={user}
                         opened={opened}
                     />
 
                     <MessageInput
                         setUserList={setUserList}
-                        user={user}
                         opened={opened}
-                        setMessages={setMessages}
+                        appendMessage={appendMessage}
                     />
 
                 </div>

@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react"
-import type { MessagesType } from "../types/message.types";
+import type { singleMessageType } from "../types/message.types";
 import { sendMessage, sendStartTyping, sendStopTyping } from "../services/websocket";
 import type { UserType } from "../types/auth.types";
+import { useAuth } from "../hooks/useAuth";
 
-const MessageInput = ({ user, opened, setMessages, setUserList }: {
-    user: UserType | null,
+const MessageInput = ({ opened, appendMessage, setUserList }: {
     opened: UserType | null,
-    setMessages: React.Dispatch<React.SetStateAction<MessagesType>>,
+    appendMessage: (m: singleMessageType) => void,
     setUserList: React.Dispatch<React.SetStateAction<UserType[]>>
 }) => {
+    const { user } = useAuth();
     const [formData, setFormData] = useState({
         content: ""
     })
@@ -86,10 +87,7 @@ const MessageInput = ({ user, opened, setMessages, setUserList }: {
                 createdAt: new Date(Date.now()),
                 readAt: null,
             };
-
-            setMessages((prev) => {
-                return [...prev, newMessage]
-            });
+            appendMessage(newMessage);
 
             setUserList((prev) => {
                 let updatedUser = prev.filter(u => u.id == newMessage.receiverId);

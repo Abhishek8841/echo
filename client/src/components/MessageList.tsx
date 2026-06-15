@@ -1,9 +1,10 @@
+import { useAuth } from '../hooks/useAuth'
 import type { UserType } from '../types/auth.types'
 import type { MessagesType } from '../types/message.types'
 
-const MessageList = ({ messages, user, opened }: { messages: MessagesType, user: UserType | null, opened: UserType | null }) => {
+const MessageList = ({ messages, opened }: { messages: MessagesType, opened: UserType | null }) => {
     console.log("message list rendered")
-
+    const { user } = useAuth();
     if (!user || !opened) return (<></>);
 
     return (

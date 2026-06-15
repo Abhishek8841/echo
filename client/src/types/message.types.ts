@@ -7,6 +7,15 @@ export type MessagesType = {
     readAt: Date | null
 }[]
 
+export type singleMessageType = {
+    id: string,
+    content: string,
+    senderId: string,
+    receiverId: string,
+    createdAt: Date,
+    readAt: Date | null
+}
+
 export type recieveMessage = {
     type: "recieve_message",
     payload: {
