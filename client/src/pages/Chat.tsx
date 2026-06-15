@@ -3,11 +3,12 @@ import Sidebar from '../components/Sidebar';
 import MessageList from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
 import { getUnreadList, getUsers } from '../services/api';
-import type { serverMessageType } from '../types/message.types';
+import type { OnlineList, readReceiptType, recieveMessage, serverMessageType, startTypingType, statusIndicatorType, stopTypingType } from '../types/message.types';
 import type { UserType } from '../types/auth.types';
 import Navbar from '../components/Navbar';
 import { connect, disconnect, getSocket } from '../services/websocket';
 import useMessage from '../hooks/useMessage';
+import useSocket from '../hooks/useSocket';
 
 const Chat = () => {
     const [opened, setOpened] = useState<UserType | null>(null);
@@ -18,8 +19,8 @@ const Chat = () => {
     const openedRef = useRef<UserType | null>(null);
 
     openedRef.current = opened;
-
     const { messages, fetchMessages, appendMessage, abortMessages, appendAndMarkMessageAsRead, receieveRead } = useMessage();
+    useSocket({ recieve_message, status_indicator, online_list, start_typing, stop_typing, recieve_read_receipt })
 
     // userList
     useEffect(() => {
@@ -41,95 +42,67 @@ const Chat = () => {
         return () => { abortMessages() };
     }, [opened])
 
-    // websocket connection 
-    useEffect(() => {
-        connect();
-
-        const socket = getSocket();
-
-        if (!socket)
-            return;
-
-        socket.onmessage = (event) => {
-
-            try {
-                const msg: serverMessageType = JSON.parse(event.data);
-                switch (msg.type) {
-                    case "recieve_message":
-                        setUserList((prev) => {
-                            let updatedUser = prev.filter(u => u.id == msg.payload.senderId);
-                            return [
-                                ...updatedUser,
-                                ...prev.filter((p) => {
-                                    return p.id !== updatedUser[0].id
-                                }
-                                )
-                            ]
-                        })
-                        if (msg.payload.senderId === openedRef.current?.id) {
-                            appendAndMarkMessageAsRead(msg.payload, openedRef.current.id);
-                        }
-                        else {
-                            setUnreadCount(prev => ({
-                                ...prev,
-                                [msg.payload.senderId]:
-                                    (prev[msg.payload.senderId] || 0) + 1
-                            }));
-                        }
-                        break;
-
-                    case "status_indicator":
-                        if (msg.payload.content == "ONLINE") {
-                            setOnlineList((prev) => {
-                                let newList = Array.from(prev);
-                                newList = [...newList, msg.payload.from]
-                                return new Set(newList);
-                            })
-                        }
-                        else {
-                            setOnlineList((prev) => {
-                                let newList = Array.from(prev);
-                                newList = newList.filter(id => id !== msg.payload.from);
-                                return new Set(newList);
-                            })
-                        }
-                        break;
-
-                    case "online_list":
-                        setOnlineList(new Set(msg.payload))
-                        break;
-
-                    case "start_typing":
-                        setTypingUsers((prev) => {
-                            const newSet = new Set(prev);
-                            newSet.add(msg.payload.from);
-                            return newSet;
-                        })
-                        break;
-
-                    case "stop_typing":
-                        setTypingUsers((prev) => {
-                            const newSet = new Set(prev);
-                            newSet.delete(msg.payload.from);
-                            return newSet;
-                        })
-                        break;
-                    case "recieve_read_receipt":
-                        if (msg.payload.from === openedRef.current?.id) {
-                            receieveRead(msg);
-                        }
-                        break;
+    function recieve_message(msg: recieveMessage) {
+        setUserList((prev) => {
+            let updatedUser = prev.filter(u => u.id == msg.payload.senderId);
+            return [
+                ...updatedUser,
+                ...prev.filter((p) => {
+                    return p.id !== updatedUser[0].id
                 }
-            }
-            catch (e) {
-                console.error(e);
-            }
-
-        };
-        return () => {
-            disconnect();
+                )
+            ]
+        })
+        if (msg.payload.senderId === openedRef.current?.id) {
+            appendAndMarkMessageAsRead(msg.payload, openedRef.current.id);
         }
-    }, []);
+        else {
+            setUnreadCount(prev => ({
+                ...prev,
+                [msg.payload.senderId]:
+                    (prev[msg.payload.senderId] || 0) + 1
+            }));
+        }
+    }
+    function status_indicator(msg: statusIndicatorType) {
+        if (msg.payload.content == "ONLINE") {
+            setOnlineList((prev) => {
+                let newList = Array.from(prev);
+                newList = [...newList, msg.payload.from]
+                return new Set(newList);
+            })
+        }
+        else {
+            setOnlineList((prev) => {
+                let newList = Array.from(prev);
+                newList = newList.filter(id => id !== msg.payload.from);
+                return new Set(newList);
+            })
+        }
+    }
+    function online_list(msg: OnlineList) {
+        setOnlineList(new Set(msg.payload))
+    }
+
+    function start_typing(msg: startTypingType) {
+        setTypingUsers((prev) => {
+            const newSet = new Set(prev);
+            newSet.add(msg.payload.from);
+            return newSet;
+        })
+    }
+    function stop_typing(msg: stopTypingType) {
+        setTypingUsers((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(msg.payload.from);
+            return newSet;
+        })
+    }
+    function recieve_read_receipt(msg: readReceiptType) {
+        if (msg.payload.from === openedRef.current?.id) {
+            receieveRead(msg);
+        }
+    }
 
     return (
         <div className="h-screen bg-slate-100 flex flex-col">

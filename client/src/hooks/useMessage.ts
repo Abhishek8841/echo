@@ -22,7 +22,6 @@ const useMessage = () => {
             console.error(error);
         }
     }
-
     function abortMessages() {
         // had to make it a ref since we wanted to abort the request from somewhere else
         controllerRef.current?.abort();
