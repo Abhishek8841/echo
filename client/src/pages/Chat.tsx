@@ -3,10 +3,9 @@ import Sidebar from '../components/Sidebar';
 import MessageList from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
 import { getUnreadList, getUsers } from '../services/api';
-import type { OnlineList, readReceiptType, recieveMessage, serverMessageType, startTypingType, statusIndicatorType, stopTypingType } from '../types/message.types';
+import type { OnlineList, readReceiptType, recieveMessage, startTypingType, statusIndicatorType, stopTypingType } from '../types/message.types';
 import type { UserType } from '../types/auth.types';
 import Navbar from '../components/Navbar';
-import { connect, disconnect, getSocket } from '../services/websocket';
 import useMessage from '../hooks/useMessage';
 import useSocket from '../hooks/useSocket';
 
