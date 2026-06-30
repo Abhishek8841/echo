@@ -4,8 +4,6 @@
 
 **A full-stack, real-time one-to-one chat application built with React, Node.js, WebSockets, and PostgreSQL.**
 
-[Features](#-features) · [Tech Stack](#-tech-stack) · [Architecture](#-architecture) · [Getting Started](#-getting-started) · [API Docs](#-api-documentation) · [WebSocket Events](#-websocket-events)
-
 </div>
 
 ---
