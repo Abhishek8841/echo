@@ -1,44 +1,31 @@
 <div align="center">
 
-# 💬 Sync — Real-Time Chat Application
+# Sync — Real-Time Chat Application
 
 **A full-stack, real-time one-to-one chat application built with React, Node.js, WebSockets, and PostgreSQL.**
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![Node.js](https://img.shields.io/badge/Node.js-20+-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-7-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
-[![WebSocket](https://img.shields.io/badge/WebSocket-ws_8-010101?style=for-the-badge&logo=socketdotio&logoColor=white)](https://github.com/websockets/ws)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
-
-<br />
-
 [Features](#-features) · [Tech Stack](#-tech-stack) · [Architecture](#-architecture) · [Getting Started](#-getting-started) · [API Docs](#-api-documentation) · [WebSocket Events](#-websocket-events)
-
-<br />
 
 </div>
 
 ---
 
-## ✨ Features
+## Features
 
 | Category | Features |
 |---|---|
-| **🔐 Authentication** | Email/password signup & login, JWT with HTTP-only cookies, protected routes, session persistence |
-| **💬 Messaging** | One-to-one real-time chat, message persistence in PostgreSQL, message history retrieval |
-| **⚡ Real-Time** | WebSocket-powered instant delivery, typing indicators (start/stop), read receipts with timestamps |
-| **🟢 Presence** | Online/offline status tracking, live online users list, broadcast status changes |
-| **📊 Tracking** | Unread message count per conversation, per-sender grouping, delivery status indicators |
-| **🎨 UI/UX** | Responsive design with TailwindCSS, loading spinners, error handling states, route guards |
-| **🔒 Security** | Bcrypt password hashing (10 salt rounds), Zod input validation on all endpoints, cookie-based auth for WebSocket |
-| **🐳 Infrastructure** | Docker support, PostgreSQL containerization, environment-based configuration |
+| **Authentication** | Email/password signup & login, JWT with HTTP-only cookies, protected routes, session persistence |
+| **Messaging** | One-to-one real-time chat, message persistence in PostgreSQL, message history retrieval |
+| **Real-Time** | WebSocket-powered instant delivery, typing indicators (start/stop), read receipts with timestamps |
+| **Presence** | Online/offline status tracking, live online users list, broadcast status changes |
+| **Tracking** | Unread message count per conversation, per-sender grouping, delivery status indicators |
+| **UI/UX** | Responsive design with TailwindCSS, loading spinners, error handling states, route guards |
+| **Security** | Bcrypt password hashing (10 salt rounds), Zod input validation on all endpoints, cookie-based auth for WebSocket |
+| **Infrastructure** | Docker support, PostgreSQL containerization, environment-based configuration |
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Frontend
 
@@ -67,13 +54,13 @@
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
 ### System Architecture Diagram
 
 ```mermaid
 graph TB
-    subgraph Client["🖥️ Client (React + Vite)"]
+    subgraph Client["Client (React + Vite)"]
         UI["Pages & Components"]
         CTX["AuthContext"]
         HOOKS["Custom Hooks<br/>useAuth · useSocket · useMessage"]
@@ -81,7 +68,7 @@ graph TB
         ROUTER["React Router<br/>ProtectedRoute · PublicRoute"]
     end
 
-    subgraph Server["⚙️ Server (Node.js + Express)"]
+    subgraph Server["Server (Node.js + Express)"]
         subgraph HTTP["REST API Layer"]
             MW["Auth Middleware<br/>JWT Cookie Verification"]
             CTRL["Controllers<br/>Auth · Conversation"]
@@ -98,7 +85,7 @@ graph TB
         end
     end
 
-    subgraph DB["🗄️ Database"]
+    subgraph DB["Database"]
         PG["PostgreSQL"]
         PRISMA["Prisma ORM<br/>@prisma/adapter-pg"]
     end
@@ -127,60 +114,9 @@ graph TB
     style WS fill:#1a1a2e,stroke:#00b4d8,color:#fff
 ```
 
-### Message Flow — Sequence Diagram
-
-```mermaid
-sequenceDiagram
-    participant S as 👤 Sender
-    participant WS_S as 🔌 Sender WS
-    participant SRV as ⚙️ Server
-    participant DB as 🗄️ PostgreSQL
-    participant SM as 📋 Socket Manager
-    participant WS_R as 🔌 Receiver WS
-    participant R as 👤 Receiver
-
-    Note over S,R: 1️⃣ Connection Phase
-    S->>WS_S: Connect (ws://localhost:3000)
-    WS_S->>SRV: HTTP Upgrade + Cookie
-    SRV->>SRV: extractUserId(cookie → JWT → id)
-    SRV->>SM: addUser(senderId, socket)
-    SRV-->>WS_S: online_list [userId1, userId2, ...]
-    SRV-->>WS_R: status_indicator {from: senderId, content: "ONLINE"}
-
-    Note over S,R: 2️⃣ Typing Indicators
-    S->>WS_S: {type: "start_typing", payload: {to: receiverId}}
-    WS_S->>SRV: Parse & validate (Zod)
-    SRV->>SM: sendToUser(receiverId)
-    SM-->>WS_R: {type: "start_typing", payload: {from: senderId}}
-    WS_R-->>R: Show "typing..." indicator
-
-    S->>WS_S: {type: "stop_typing", payload: {to: receiverId}}
-    SRV->>SM: sendToUser(receiverId)
-    SM-->>WS_R: {type: "stop_typing", payload: {from: senderId}}
-    WS_R-->>R: Hide typing indicator
-
-    Note over S,R: 3️⃣ Message Delivery
-    S->>WS_S: {type: "send_message", payload: {to, content}}
-    WS_S->>SRV: Parse & validate (clientMessageSchema)
-    SRV->>DB: prisma.message.create({content, senderId, receiverId})
-    DB-->>SRV: Created message (id, content, createdAt)
-    SRV->>SM: getUserSockets(receiverId)
-    SM-->>WS_R: {type: "recieve_message", payload: {id, content, senderId, ...}}
-    WS_R-->>R: Display new message in chat
-
-    Note over S,R: 4️⃣ Read Receipts
-    R->>WS_R: {type: "send_read_receipt", payload: {to: senderId}}
-    WS_R->>SRV: Parse & validate
-    SRV->>DB: prisma.message.updateMany({readAt: new Date()})
-    DB-->>SRV: Updated messages
-    SRV->>SM: sendToUser(senderId)
-    SM-->>WS_S: {type: "recieve_read_receipt", payload: {from: receiverId, readAt}}
-    WS_S-->>S: Update message status ✓✓
-```
-
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 Sync/
@@ -275,7 +211,7 @@ Sync/
 
 ---
 
-## 🗃️ Database Schema
+## Database Schema
 
 ### ER Diagram
 
@@ -682,7 +618,7 @@ The `unread` field is a map of `senderId` to the number of messages from that se
 
 ---
 
-## 🔌 WebSocket Events
+##  WebSocket Events
 
 The WebSocket server runs on the same port as the HTTP server (`ws://localhost:3000`). Authentication is handled by parsing the `token` cookie from the upgrade request headers.
 
@@ -732,7 +668,7 @@ const serverMessageSchema = z.discriminatedUnion("type", [
 
 ---
 
-## ⚙️ Environment Variables
+##  Environment Variables
 
 ### Server (`server/.env`)
 
@@ -753,7 +689,7 @@ The client uses hardcoded URLs for development. To configure for production, upd
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -844,185 +780,28 @@ The application will be available at:
 
 ---
 
-## 🐳 Docker Setup
 
-### PostgreSQL Only
-
-```bash
-docker run -d \
-  --name sync-postgres \
-  -e POSTGRES_PASSWORD=mysupersecret \
-  -p 5433:5432 \
-  postgres:16-alpine
-```
-
-### Full Docker Compose (Example)
-
-Create a `docker-compose.yml` in the project root:
-
-```yaml
-version: "3.9"
-
-services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: sync-postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: mysupersecret
-      POSTGRES_DB: postgres
-    ports:
-      - "5433:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    container_name: sync-server
-    environment:
-      DATABASE_URL: postgresql://postgres:mysupersecret@postgres:5432/postgres
-      TOKEN_SECRET: your-super-secret-key-here
-      PORT: 3000
-    ports:
-      - "3000:3000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    container_name: sync-client
-    ports:
-      - "5173:5173"
-    depends_on:
-      - server
-
-volumes:
-  pgdata:
-```
-
-```bash
-docker compose up -d
-```
-
----
-
-## 🧠 Engineering Decisions & Architecture
-
-### Why WebSocket (`ws`) over Socket.IO?
-
-The `ws` library was chosen over Socket.IO for several reasons:
-
-- **Zero abstraction tax** — Direct WebSocket protocol without the Socket.IO custom protocol layer, reducing payload overhead.
-- **Native browser API** — The client uses the browser's built-in `WebSocket` API, eliminating the need for a client-side library.
-- **Explicit control** — Full control over connection lifecycle, message routing, and reconnection logic without opinionated defaults.
-- **Lighter footprint** — `ws` is ~50KB vs Socket.IO's ~300KB+ (server + client).
-
-### Authentication Architecture
-
-```
-HTTP Request  →  cookie-parser  →  auth.middleware  →  jwt.verify  →  req.id
-WebSocket     →  cookie header  →  extract-user.ts  →  jwt.verify  →  userId
-```
-
-Both REST and WebSocket connections share the **same JWT stored in an HTTP-only cookie**. This design:
-
-- **Prevents XSS token theft** — The token is never accessible via JavaScript (`document.cookie`).
-- **Unifies auth across transports** — The WebSocket handshake includes cookies automatically, so no custom auth protocol is needed.
-- **Simplifies the client** — No token management, refresh logic, or header injection required.
-
-### Socket Manager — Multi-Tab Support
-
-```typescript
-const list = new Map<string, Set<WebSocket>>();
-```
-
-The socket manager uses a `Map<userId, Set<WebSocket>>` instead of `Map<userId, WebSocket>`. This supports **multiple concurrent connections per user** (e.g., multiple browser tabs). When a user closes one tab, only that specific socket is removed. The user is considered "offline" only when their `Set` becomes empty.
-
-### Zod Discriminated Unions for WebSocket Messages
-
-All WebSocket messages use **Zod discriminated unions** keyed on the `type` field:
-
-```typescript
-const clientMessageSchema = z.discriminatedUnion("type", [
-  sendMessageSchema,
-  clientStartTypingSchema,
-  clientStopTypingSchema,
-  readMessageSchema,
-]);
-```
-
-This provides:
-- **Type-safe routing** — The `switch` statement in `ws.ts` gets exhaustive type checking.
-- **Runtime validation** — Malformed messages are silently dropped at the boundary.
-- **Self-documenting protocol** — The schema serves as the single source of truth for the WebSocket API contract.
-
-### Layered Backend Architecture
-
-The server follows a **Controller → Service → Prisma** pattern:
-
-| Layer | Responsibility | Example |
-|---|---|---|
-| **Routes** | HTTP verb + path mapping | `router1.post("/signup", signUpController)` |
-| **Controllers** | Request parsing, Zod validation, response formatting | `signUpController` |
-| **Services** | Business logic, database operations | `signUpService` |
-| **Schemas** | Input/output validation with Zod | `signUpSchema` |
-
-This separation ensures:
-- Controllers never touch the database directly.
-- Services are transport-agnostic (reusable across REST and WebSocket).
-- Validation happens at the boundary, not deep in business logic.
-
-### Unread Count — Efficient Aggregation
-
-```typescript
-const result = await prisma.message.groupBy({
-  by: ["senderId"],
-  where: { receiverId: id, readAt: null },
-  _count: true,
-});
-```
-
-Instead of fetching all unread messages and counting client-side, the app uses Prisma's `groupBy` with `_count` to perform the aggregation at the database level. This produces a single SQL `GROUP BY` query, keeping the response payload minimal regardless of message volume.
-
----
-
-## 🔮 Future Improvements
+##  Future Improvements
 
 | Feature | Description | Complexity |
 |---|---|---|
-| 👥 **Group Chats** | Multi-user chat rooms with member management and admin roles | 🟡 Medium |
-| 📎 **File Sharing** | Image, document, and media uploads with preview support (S3/Cloudinary) | 🟡 Medium |
-| 📹 **Video/Audio Calls** | WebRTC-based peer-to-peer calling with signaling server | 🔴 High |
-| 🔐 **End-to-End Encryption** | Signal Protocol implementation for client-side message encryption | 🔴 High |
-| 🚀 **Redis Pub/Sub** | Horizontal scaling with Redis as a message broker between server instances | 🟡 Medium |
-| ☸️ **Kubernetes Deployment** | Container orchestration with Helm charts, HPA, and ingress configuration | 🔴 High |
-| 🔄 **CI/CD Pipelines** | GitHub Actions for automated testing, linting, building, and deployment | 🟢 Low |
-| 📊 **Prometheus/Grafana** | Metrics collection, dashboards for WebSocket connections, message throughput, and latency | 🟡 Medium |
-| 🔍 **Message Search** | Full-text search across conversation history using PostgreSQL `tsvector` | 🟡 Medium |
-| 📱 **Push Notifications** | Service Worker + Web Push API for offline message notifications | 🟡 Medium |
-
----
-
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
+|  **Group Chats** | Multi-user chat rooms with member management and admin roles |  Medium |
+|  **File Sharing** | Image, document, and media uploads with preview support (S3/Cloudinary) |  Medium |
+|  **Video/Audio Calls** | WebRTC-based peer-to-peer calling with signaling server |  High |
+|  **End-to-End Encryption** | Signal Protocol implementation for client-side message encryption |  High |
+|  **Redis Pub/Sub** | Horizontal scaling with Redis as a message broker between server instances |  Medium |
+|  **Kubernetes Deployment** | Container orchestration with Helm charts, HPA, and ingress configuration |  High |
+|  **CI/CD Pipelines** | GitHub Actions for automated testing, linting, building, and deployment |  Low |
+| **Prometheus/Grafana** | Metrics collection, dashboards for WebSocket connections, message throughput, and latency | Medium |
+| **Message Search** | Full-text search across conversation history using PostgreSQL `tsvector` | Medium |
+| **Push Notifications** | Service Worker + Web Push API for offline message notifications | Medium |
 
 ---
 
 <div align="center">
 
-**Built with ❤️ by [Abhishek](https://github.com/Abhishek8841)**
+**Built by [Abhishek](https://github.com/Abhishek8841)**
 
-⭐ Star this repo if you found it helpful!
+Star this repo if you found it helpful!
 
 </div>
