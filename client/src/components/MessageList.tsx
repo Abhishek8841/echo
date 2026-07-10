@@ -1,73 +1,77 @@
+import { useEffect, useRef } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import type { UserType } from '../types/auth.types'
 import type { MessagesType } from '../types/message.types'
 
 const MessageList = ({ messages, opened }: { messages: MessagesType, opened: UserType | null }) => {
-    console.log("message list rendered")
     const { user } = useAuth();
-    if (!user || !opened) return (<></>);
+    const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
+    if (!user || !opened) {
+        return (
+            <div className="flex-1 flex items-center justify-center bg-gray-50">
+                <p className="text-sm text-gray-400">
+                    Select a conversation to start messaging
+                </p>
+            </div>
+        );
+    }
 
     return (
-        <div className="flex flex-col gap-4 p-6 bg-slate-100 h-[calc(100vh-9rem)] overflow-y-auto">
+        <div className="flex-1 overflow-y-auto bg-gray-50 px-5 py-4">
 
-            {messages.map((message) => {
-                return (
-                    <div
-                        className={
-                            message.senderId == user.id
-                                ? "bg-amber-400 border border-amber-950 rounded-2xl p-4 max-w-[70%] self-end shadow"
-                                : "bg-blue-500 text-white border border-blue-950 rounded-2xl p-4 max-w-[70%] self-start shadow"
-                        }
-                        key={message.id}
-                    >
-                        <div className="break-words">
-                            {message.content}
-                        </div>
+            <div className="flex flex-col gap-1">
+                {messages.map((message) => {
+                    const isSent = message.senderId === user.id;
 
-                        <br />
+                    return (
+                        <div
+                            key={message.id}
+                            className={`flex flex-col mb-2 ${isSent ? 'items-end' : 'items-start'}`}
+                        >
+                            <div
+                                className={`max-w-[65%] px-4 py-2.5 rounded-lg ${
+                                    isSent
+                                        ? 'bg-gray-900 text-white'
+                                        : 'bg-white border border-gray-200 text-gray-900'
+                                }`}
+                            >
+                                <p className="text-sm break-words leading-relaxed">
+                                    {message.content}
+                                </p>
+                            </div>
 
-                        <div className="text-sm opacity-80">
-                            {new Date(message.createdAt).toLocaleString("en-IN", {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                                hour: "numeric",
-                                minute: "2-digit",
-                            })}
-                        </div>
-
-                        <br />
-                        {
-                            message.receiverId == opened.id
-                                ?
-                                (message.readAt == null) ?
-                                    "delivered"
-                                    :
-                                    `read at ${new Date(message.readAt).toLocaleString("en-IN", {
+                            <div className="flex items-center gap-2 mt-1 px-1">
+                                <span className="text-xs text-gray-400">
+                                    {new Date(message.createdAt).toLocaleString("en-IN", {
                                         day: "numeric",
                                         month: "short",
-                                        year: "numeric",
                                         hour: "numeric",
                                         minute: "2-digit",
-                                    })}`
-                                :
-                                <></>
-                        }
+                                    })}
+                                </span>
 
-                        <br />
-                        <div className="text-sm font-medium">
-                            {message.senderId == user.id
-                                ? "sent by you"
-                                : `sent by ${opened.email}`}
+                                {isSent && (
+                                    <span className="text-xs text-gray-400">
+                                        {message.readAt === null
+                                            ? 'Delivered'
+                                            : 'Read'
+                                        }
+                                    </span>
+                                )}
+                            </div>
                         </div>
+                    )
+                })}
+                <div ref={bottomRef} />
+            </div>
 
-                    </div>
-                )
-            })}
-
-        </div >
+        </div>
     )
-
 }
 
 export default MessageList

@@ -3,50 +3,66 @@ import { logout } from '../services/api'
 import type { UserType } from '../types/auth.types'
 import { useAuth } from '../hooks/useAuth'
 
-const Navbar = ({ setOpened, opened, typingUsers }: {
+const Navbar = ({ setOpened, opened, onlineList, typingUsers }: {
     setOpened: React.Dispatch<React.SetStateAction<UserType | null>>,
     opened: UserType | null,
+    onlineList: Set<string>,
     typingUsers: Set<string>,
 }) => {
     const { user } = useAuth();
     const navigate = useNavigate();
-    console.log("navbar rendered")
+
+    const openedName = opened ? opened.email.split('@')[0] : null;
+    const isOnline = opened ? onlineList.has(opened.id) : false;
+    const isTyping = opened ? typingUsers.has(opened.id) : false;
+
     return (
-        <div className="h-16 bg-slate-800 text-white flex items-center justify-between px-6 shadow-md">
+        <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-5 shrink-0">
 
-            <div className="font-medium text-lg">
-                {user ? user.email.split('@')[0] : ""}
+            <div className="flex items-center gap-3 min-w-0">
+                {opened ? (
+                    <>
+                        <button
+                            onClick={() => setOpened(null)}
+                            className="text-gray-400 hover:text-gray-600 transition-colors duration-150 p-1 -ml-1"
+                            aria-label="Close chat"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12.5 5L7.5 10L12.5 15" />
+                            </svg>
+                        </button>
+
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                                <span className="font-medium text-gray-900 text-sm truncate">
+                                    {openedName}
+                                </span>
+                                <span className={`inline-block w-2 h-2 rounded-full shrink-0 ${isOnline ? 'bg-green-500' : 'bg-gray-300'}`} />
+                            </div>
+                            {isTyping && (
+                                <p className="text-xs text-gray-400 leading-tight">
+                                    typing...
+                                </p>
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    <span className="font-semibold text-gray-900 text-sm">
+                        Sync
+                    </span>
+                )}
             </div>
-            <div className="flex gap-3 items-center">
 
-                {opened ?
-                    <button
-                        className="bg-slate-600 hover:bg-slate-500 px-4 py-2 rounded-lg transition"
-                        onClick={() => { setOpened(null) }}
-                    >
-                        {`CLOSE ${opened.email.split('@')[0]}'s CHAT`}
-                    </button>
-                    :
-                    <></>
-                }
-
+            <div className="flex items-center gap-4">
+                <span className="text-sm text-gray-500 hidden sm:block">
+                    {user ? user.email.split('@')[0] : ''}
+                </span>
                 <button
-                    className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-lg transition"
+                    className="text-sm text-gray-500 hover:text-gray-900 transition-colors duration-150"
                     onClick={() => { logout(), navigate("/signin") }}
                 >
-                    Logout
+                    Log out
                 </button>
-
-                {
-                    opened?.id &&
-                        typingUsers.has(opened?.id || "") ?
-                        <div className='bg-slate-600 hover:bg-slate-500 px-4 py-2 rounded-lg transition'>
-                            {`${opened.email.split('@')[0]} is typing`}
-                        </div>
-                        :
-                        <div></div>
-                }
-
             </div>
 
         </div>

@@ -57,10 +57,7 @@ const MessageInput = ({ opened, appendMessage, setUserList }: {
 
         e.preventDefault();
 
-        // console.log("hell");
-
         if (!opened) {
-            // console.log("hell2");
             return;
         }
 
@@ -72,8 +69,6 @@ const MessageInput = ({ opened, appendMessage, setUserList }: {
         }
 
         try {
-            // console.log("hell3");
-
             sendMessage(
                 opened.id,
                 formData.content
@@ -110,30 +105,27 @@ const MessageInput = ({ opened, appendMessage, setUserList }: {
     }
 
     return (
-        <div className="bg-white border-t p-4">
+        <div className="bg-white border-t border-gray-200 px-4 py-3 shrink-0">
             <form
                 onSubmit={submitHandler}
                 className="flex gap-3 items-center"
             >
-                <label className="flex-1">
-
-                    <input
-                        type="text"
-                        placeholder="Type your message here..."
-                        name="content"
-                        onChange={changeHandler}
-                        value={formData.content}
-                        className="w-full border rounded-full px-5 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-
-                </label>
+                <input
+                    type="text"
+                    placeholder="Write a message..."
+                    name="content"
+                    onChange={changeHandler}
+                    value={formData.content}
+                    autoComplete="off"
+                    className="flex-1 bg-gray-100 text-sm rounded-lg px-4 py-2.5 border-0 outline-none placeholder:text-gray-400 focus:ring-1 focus:ring-blue-600 focus:bg-white transition-colors duration-150"
+                />
 
                 <button
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-semibold transition"
+                    type="submit"
+                    className="bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors duration-150"
                 >
-                    SEND
+                    Send
                 </button>
-
             </form>
         </div>
     )

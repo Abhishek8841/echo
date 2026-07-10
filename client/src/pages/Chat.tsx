@@ -104,38 +104,36 @@ const Chat = () => {
     }
 
     return (
-        <div className="h-screen bg-slate-100 flex flex-col">
+        <div className="h-screen flex">
 
-            <Navbar
+            <Sidebar
+                userList={userList}
                 setOpened={setOpened}
                 opened={opened}
-                typingUsers={typingUsers}
+                onlineList={onlineList}
+                unreadCount={unreadCount}
+                setUnreadCount={setUnreadCount}
             />
 
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-col flex-1 min-w-0">
 
-                <Sidebar
-                    userList={userList}
+                <Navbar
                     setOpened={setOpened}
+                    opened={opened}
                     onlineList={onlineList}
-                    unreadCount={unreadCount}
-                    setUnreadCount={setUnreadCount}
+                    typingUsers={typingUsers}
                 />
 
-                <div className="flex flex-col flex-1">
+                <MessageList
+                    messages={messages}
+                    opened={opened}
+                />
 
-                    <MessageList
-                        messages={messages}
-                        opened={opened}
-                    />
-
-                    <MessageInput
-                        setUserList={setUserList}
-                        opened={opened}
-                        appendMessage={appendMessage}
-                    />
-
-                </div>
+                <MessageInput
+                    setUserList={setUserList}
+                    opened={opened}
+                    appendMessage={appendMessage}
+                />
 
             </div>
 

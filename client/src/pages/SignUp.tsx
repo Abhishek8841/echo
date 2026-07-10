@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import type { SignUpBody } from '../types/auth.types';
 import { signUp } from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 
@@ -47,62 +47,62 @@ const SignUp = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-100">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
 
             <form
                 onSubmit={submitHandler}
-                className="bg-white p-8 rounded-2xl shadow-lg w-[350px] flex flex-col gap-5"
+                className="bg-white border border-gray-200 shadow-sm rounded-lg w-[400px] p-8 flex flex-col gap-5"
             >
 
-                <h1 className="text-3xl font-bold text-center">
-                    Sign Up
+                <h1 className="text-xl font-semibold text-gray-900 text-center">
+                    Create an account
                 </h1>
 
-                <label className="flex flex-col gap-2">
-
-                    <span className="font-medium">
+                <label className="flex flex-col gap-1.5">
+                    <span className="text-sm font-medium text-gray-700">
                         Email
                     </span>
-
                     <input
                         type='text'
                         name='email'
                         value={formData.email}
-                        placeholder='john@gmail.com'
+                        placeholder='you@example.com'
                         onChange={changeHandler}
-                        className="border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                        className="border border-gray-300 rounded-md px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors duration-150 placeholder:text-gray-400"
                     />
-
                 </label>
 
-                <label className="flex flex-col gap-2">
-
-                    <span className="font-medium">
+                <label className="flex flex-col gap-1.5">
+                    <span className="text-sm font-medium text-gray-700">
                         Password
                     </span>
-
                     <input
                         type='password'
                         name='password'
                         value={formData.password}
-                        placeholder='secret'
+                        placeholder='Create a password'
                         onChange={changeHandler}
-                        className="border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                        className="border border-gray-300 rounded-md px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors duration-150 placeholder:text-gray-400"
                     />
-
                 </label>
 
                 <button
-                    className="bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+                    className="bg-gray-900 hover:bg-gray-800 text-white py-2.5 rounded-md text-sm font-medium transition-colors duration-150"
                 >
-                    SUBMIT
+                    Sign up
                 </button>
+
+                <p className="text-sm text-center text-gray-500">
+                    Already have an account?{' '}
+                    <Link to="/signin" className="text-blue-600 hover:text-blue-700 font-medium transition-colors duration-150">
+                        Sign in
+                    </Link>
+                </p>
 
             </form>
 
         </div>
     )
-
 }
 
 export default SignUp

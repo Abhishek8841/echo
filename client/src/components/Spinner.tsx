@@ -1,6 +1,8 @@
 const Spinner = () => {
     return (
-        <div className='spinner'>LOADING</div>
+        <div className="h-screen flex items-center justify-center">
+            <div className="spinner" />
+        </div>
     )
 }
 
