@@ -47,19 +47,25 @@ const SignUp = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-amber-50">
 
             <form
                 onSubmit={submitHandler}
-                className="bg-white border border-gray-200 shadow-sm rounded-lg w-[400px] p-8 flex flex-col gap-5"
+                className="animate-fade-in-up bg-white border border-gray-100 shadow-lg shadow-orange-100/30 rounded-2xl w-[420px] p-8 flex flex-col gap-5"
             >
 
-                <h1 className="text-xl font-semibold text-gray-900 text-center">
-                    Create an account
-                </h1>
+                <div className="text-center mb-2">
+                    <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-gradient-to-br from-orange-400 to-amber-400 flex items-center justify-center shadow-md shadow-orange-200/50">
+                        <span className="text-lg font-bold text-white">S</span>
+                    </div>
+                    <h1 className="text-xl font-semibold text-gray-800">
+                        Create your account
+                    </h1>
+                    <p className="text-sm text-gray-400 mt-1">Get started with Sync for free</p>
+                </div>
 
                 <label className="flex flex-col gap-1.5">
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium text-gray-600">
                         Email
                     </span>
                     <input
@@ -68,12 +74,12 @@ const SignUp = () => {
                         value={formData.email}
                         placeholder='you@example.com'
                         onChange={changeHandler}
-                        className="border border-gray-300 rounded-md px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors duration-150 placeholder:text-gray-400"
+                        className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-100 transition-all duration-200 placeholder:text-gray-400"
                     />
                 </label>
 
                 <label className="flex flex-col gap-1.5">
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium text-gray-600">
                         Password
                     </span>
                     <input
@@ -82,19 +88,19 @@ const SignUp = () => {
                         value={formData.password}
                         placeholder='Create a password'
                         onChange={changeHandler}
-                        className="border border-gray-300 rounded-md px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors duration-150 placeholder:text-gray-400"
+                        className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-100 transition-all duration-200 placeholder:text-gray-400"
                     />
                 </label>
 
                 <button
-                    className="bg-gray-900 hover:bg-gray-800 text-white py-2.5 rounded-md text-sm font-medium transition-colors duration-150"
+                    className="bg-gradient-to-r from-orange-400 to-amber-400 hover:from-orange-500 hover:to-amber-500 text-white py-2.5 rounded-xl text-sm font-medium transition-all duration-200 shadow-md shadow-orange-200/50 hover:shadow-lg hover:shadow-orange-300/50"
                 >
-                    Sign up
+                    Create account
                 </button>
 
-                <p className="text-sm text-center text-gray-500">
+                <p className="text-sm text-center text-gray-400">
                     Already have an account?{' '}
-                    <Link to="/signin" className="text-blue-600 hover:text-blue-700 font-medium transition-colors duration-150">
+                    <Link to="/signin" className="text-amber-500 hover:text-amber-600 font-medium transition-colors duration-200">
                         Sign in
                     </Link>
                 </p>
