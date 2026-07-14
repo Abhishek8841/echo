@@ -16,9 +16,11 @@ export const signUpController = async (req: Request, res: Response) => {
         const { token, newUser } = await signUpService(data);
         res.cookie("token", token, {
             httpOnly: true,
-            sameSite: "lax",
-            secure: false,
-        })
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production"
+                ? "none"
+                : "lax"
+        });
         return res.status(200).json(
             {
                 success: true,
@@ -50,9 +52,11 @@ export const signInController = async (req: Request, res: Response) => {
         const { token, user } = await signInService(data);
         res.cookie("token", token, {
             httpOnly: true,
-            sameSite: "lax",
-            secure: false,
-        })
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production"
+                ? "none"
+                : "lax"
+        });
         return res.status(200).json(
             {
                 success: true,
@@ -91,8 +95,10 @@ export const meController = async (req: Request, res: Response) => {
 export const logoutController = (req: Request, res: Response) => {
     res.clearCookie("token", {
         httpOnly: true,
-        sameSite: "lax",
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production"
+            ? "none"
+            : "lax"
     });
     return res.json({
         success: true,

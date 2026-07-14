@@ -1,0 +1,61 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: postgres-db
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    ports:
+      - "5433:5432"
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mydb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./server
+
+    container_name: sync-backend
+
+    restart: always
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/mydb
+      TOKEN_SECRET: your-secret
+      PORT: 3000
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./client
+      args:
+        MODE: development
+
+    container_name: sync-frontend
+
+    ports:
+      - "8080:80"
+
+    depends_on:
+      - backend
+
+
+volumes:
+  postgres-data:

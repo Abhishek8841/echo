@@ -7,7 +7,29 @@ import type { IncomingMessage, Server } from "http";
 import type { ServerMessageType } from "./schemas/server-message.schema.js";
 
 export const initWebsockets = (server: Server) => {
-    const wss = new WebSocketServer({ server });
+    const allowedOrigins = [
+        "http://localhost:5173",
+        "http://localhost:8080",
+        "https://chat.abatra.me"
+    ];
+
+
+    const wss = new WebSocketServer({
+        server,
+
+        verifyClient(info, cb) {
+
+            if (
+                allowedOrigins.includes(info.origin)
+            ) {
+                cb(true);
+            }
+            else {
+                cb(false);
+            }
+
+        }
+    });
 
     wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
         const id = extractUserId(req);

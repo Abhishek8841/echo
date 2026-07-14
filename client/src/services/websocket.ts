@@ -1,7 +1,7 @@
 let socket: WebSocket | null = null;
 
 export function connect() {
-    if (!socket) socket = new WebSocket("ws://localhost:3000");
+    if (!socket) socket = new WebSocket(import.meta.env.VITE_WS_URL);
     return;
 }
 
