@@ -12,6 +12,7 @@ export const signUpController = async (req: Request, res: Response) => {
             }
         )
         const data = result.data;
+        console.log("signup");
         const { token, newUser } = await signUpService(data);
         res.cookie("token", token, {
             httpOnly: true,
