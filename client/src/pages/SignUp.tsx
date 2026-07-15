@@ -59,7 +59,7 @@ const SignUp = () => {
                     <h1 className="text-[15px] font-medium text-[#37352F]">
                         Create an account
                     </h1>
-                    <p className="text-[12px] text-[#9B9A97] mt-0.5">Get started with Sync</p>
+                    <p className="text-[12px] text-[#9B9A97] mt-0.5">Get started with Echo</p>
                 </div>
 
                 <label className="flex flex-col gap-1">

@@ -25,7 +25,7 @@ services:
     build:
       context: ./server
 
-    container_name: sync-backend
+    container_name: echo-backend
 
     restart: always
 
@@ -48,7 +48,7 @@ services:
       args:
         MODE: development
 
-    container_name: sync-frontend
+    container_name: echo-frontend
 
     ports:
       - "8080:80"

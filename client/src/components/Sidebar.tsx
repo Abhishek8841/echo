@@ -36,7 +36,7 @@ const Sidebar = ({ userList, setOpened, opened, onlineList, unreadCount, setUnre
             <div className="h-14 px-4 flex items-center shrink-0">
                 <div className="flex items-center gap-2">
                     <div className="w-[22px] h-[22px] rounded bg-[#37352F] flex items-center justify-center">
-                        <span className="text-[9px] font-semibold text-white">S</span>
+                        <span className="text-[9px] font-semibold text-white">E</span>
                     </div>
                     <span className="text-[13px] font-medium text-[#37352F]">Messages</span>
                 </div>

@@ -55,10 +55,10 @@ const Navbar = ({ setOpened, opened, onlineList, typingUsers }: {
                 ) : (
                     <div className="flex items-center gap-1.5">
                         <div className="w-[18px] h-[18px] rounded bg-[#37352F] flex items-center justify-center">
-                            <span className="text-[8px] font-semibold text-white">S</span>
+                            <span className="text-[8px] font-semibold text-white">E</span>
                         </div>
                         <span className="font-medium text-[#37352F] text-[13px]">
-                            Sync
+                            Echo
                         </span>
                     </div>
                 )}

@@ -1,6 +1,6 @@
 <div align="center">
 
-# Sync
+# Echo
 
 A full-stack real-time chat application built with React, Node.js, WebSockets, and PostgreSQL.
 
@@ -123,7 +123,7 @@ graph TB
 ## Project Structure
 
 ```
-sync/
+echo/
 |
 |-- client/                          # React frontend (Vite)
 |   |-- public/
@@ -695,8 +695,8 @@ This starts three containers:
 | Service | Container | Port | Description |
 |---|---|---|---|
 | postgres | postgres-db | 5433:5432 | PostgreSQL 17 database with health checks |
-| backend | sync-backend | 3000:3000 | Node.js API and WebSocket server |
-| frontend | sync-frontend | 8080:80 | Nginx serving the built React app |
+| backend | echo-backend | 3000:3000 | Node.js API and WebSocket server |
+| frontend | echo-frontend | 8080:80 | Nginx serving the built React app |
 
 **3. Open the app**
 
@@ -735,7 +735,7 @@ Using Docker (recommended):
 
 ```bash
 docker run -d \
-  --name sync-postgres \
+  --name echo-postgres \
   -e POSTGRES_PASSWORD=password \
   -e POSTGRES_DB=mydb \
   -p 5433:5432 \

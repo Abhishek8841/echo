@@ -58,7 +58,7 @@ const SignIn = () => {
                 <div className="mb-3">
 
                     <h1 className="text-[15px] font-medium text-[#37352F]">
-                        Sign in to Sync
+                        Sign in to Echo
                     </h1>
                     <p className="text-[12px] text-[#9B9A97] mt-0.5">Enter your credentials to continue</p>
                 </div>
