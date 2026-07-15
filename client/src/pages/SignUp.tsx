@@ -47,60 +47,54 @@ const SignUp = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-amber-50">
+        <div className="min-h-screen flex items-center justify-center">
 
             <form
                 onSubmit={submitHandler}
-                className="animate-fade-in-up bg-white border border-gray-100 shadow-lg shadow-orange-100/30 rounded-2xl w-[420px] p-8 flex flex-col gap-5"
+                className="animate-fade-in-up w-[320px] flex flex-col gap-3.5"
             >
 
-                <div className="text-center mb-2">
-                    <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-gradient-to-br from-orange-400 to-amber-400 flex items-center justify-center shadow-md shadow-orange-200/50">
-                        <span className="text-lg font-bold text-white">S</span>
-                    </div>
-                    <h1 className="text-xl font-semibold text-gray-800">
-                        Create your account
+                <div className="mb-3">
+
+                    <h1 className="text-[15px] font-medium text-[#37352F]">
+                        Create an account
                     </h1>
-                    <p className="text-sm text-gray-400 mt-1">Get started with Sync for free</p>
+                    <p className="text-[12px] text-[#9B9A97] mt-0.5">Get started with Sync</p>
                 </div>
 
-                <label className="flex flex-col gap-1.5">
-                    <span className="text-sm font-medium text-gray-600">
-                        Email
-                    </span>
+                <label className="flex flex-col gap-1">
+                    <span className="text-[11px] font-medium text-[#9B9A97] uppercase tracking-wide">Email</span>
                     <input
                         type='text'
                         name='email'
                         value={formData.email}
                         placeholder='you@example.com'
                         onChange={changeHandler}
-                        className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-100 transition-all duration-200 placeholder:text-gray-400"
+                        className="border border-[#E3E2DE] rounded px-2.5 py-[7px] text-[13px] text-[#37352F] outline-none focus:border-[#C8C7C3] transition-colors duration-100 placeholder:text-[#C4C4C0] bg-white"
                     />
                 </label>
 
-                <label className="flex flex-col gap-1.5">
-                    <span className="text-sm font-medium text-gray-600">
-                        Password
-                    </span>
+                <label className="flex flex-col gap-1">
+                    <span className="text-[11px] font-medium text-[#9B9A97] uppercase tracking-wide">Password</span>
                     <input
                         type='password'
                         name='password'
                         value={formData.password}
                         placeholder='Create a password'
                         onChange={changeHandler}
-                        className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-100 transition-all duration-200 placeholder:text-gray-400"
+                        className="border border-[#E3E2DE] rounded px-2.5 py-[7px] text-[13px] text-[#37352F] outline-none focus:border-[#C8C7C3] transition-colors duration-100 placeholder:text-[#C4C4C0] bg-white"
                     />
                 </label>
 
                 <button
-                    className="bg-gradient-to-r from-orange-400 to-amber-400 hover:from-orange-500 hover:to-amber-500 text-white py-2.5 rounded-xl text-sm font-medium transition-all duration-200 shadow-md shadow-orange-200/50 hover:shadow-lg hover:shadow-orange-300/50"
+                    className="bg-[#37352F] hover:bg-[#2F2D28] text-white py-[7px] rounded text-[13px] font-medium transition-colors duration-100 mt-1"
                 >
-                    Create account
+                    Continue
                 </button>
 
-                <p className="text-sm text-center text-gray-400">
+                <p className="text-[12px] text-center text-[#B4B4B0] mt-0.5">
                     Already have an account?{' '}
-                    <Link to="/signin" className="text-amber-500 hover:text-amber-600 font-medium transition-colors duration-200">
+                    <Link to="/signin" className="text-[#37352F] underline decoration-[#D3D2CE] hover:decoration-[#37352F] transition-colors duration-100">
                         Sign in
                     </Link>
                 </p>

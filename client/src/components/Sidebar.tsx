@@ -3,14 +3,14 @@ import type { UserType } from '../types/auth.types'
 import { sendReadMessage } from '../services/websocket'
 
 const avatarColors = [
-    'bg-amber-100 text-amber-600',
-    'bg-rose-100 text-rose-600',
-    'bg-sky-100 text-sky-600',
-    'bg-lime-100 text-lime-600',
-    'bg-emerald-100 text-emerald-600',
-    'bg-pink-100 text-pink-600',
-    'bg-teal-100 text-teal-600',
-    'bg-orange-100 text-orange-600',
+    'bg-[#EBEBEA] text-[#787774]',
+    'bg-[#E8E7E3] text-[#787774]',
+    'bg-[#DFDEDB] text-[#787774]',
+    'bg-[#EBEBEA] text-[#787774]',
+    'bg-[#E8E7E3] text-[#787774]',
+    'bg-[#DFDEDB] text-[#787774]',
+    'bg-[#EBEBEA] text-[#787774]',
+    'bg-[#E8E7E3] text-[#787774]',
 ];
 
 function getAvatarColor(id: string) {
@@ -31,18 +31,18 @@ const Sidebar = ({ userList, setOpened, opened, onlineList, unreadCount, setUnre
 }) => {
 
     return (
-        <div className="w-72 bg-white border-r border-gray-100 h-screen flex flex-col shrink-0">
+        <div className="w-[260px] bg-[#F7F6F3] h-screen flex flex-col shrink-0">
 
-            <div className="px-4 pt-5 pb-4 border-b border-gray-100">
+            <div className="h-14 px-4 flex items-center shrink-0">
                 <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center">
-                        <span className="text-xs font-bold text-white">S</span>
+                    <div className="w-[22px] h-[22px] rounded bg-[#37352F] flex items-center justify-center">
+                        <span className="text-[9px] font-semibold text-white">S</span>
                     </div>
-                    <h2 className="text-sm font-semibold text-gray-800">Messages</h2>
+                    <span className="text-[13px] font-medium text-[#37352F]">Messages</span>
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-2 py-2">
+            <div className="flex-1 overflow-y-auto px-2 py-0.5">
                 {userList.map((user, index) => {
                     const name = user.email.split('@')[0];
                     const initial = name.charAt(0).toUpperCase();
@@ -62,37 +62,37 @@ const Sidebar = ({ userList, setOpened, opened, onlineList, unreadCount, setUnre
                                     [user.id]: 0
                                 }));
                             }}
-                            style={{ animationDelay: `${index * 40}ms` }}
-                            className={`animate-fade-in flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 mb-0.5 ${
+                            style={{ animationDelay: `${index * 30}ms` }}
+                            className={`animate-fade-in flex items-center gap-2.5 px-2 py-[7px] rounded-md cursor-pointer transition-colors duration-100 ${
                                 isSelected
-                                    ? 'bg-amber-50 border border-amber-100'
-                                    : 'hover:bg-gray-50 border border-transparent'
+                                    ? 'bg-[#EBEBEA]'
+                                    : 'hover:bg-[#EBEBEA]/50'
                             }`}
                         >
                             <div className="relative shrink-0">
-                                <div className={`w-10 h-10 rounded-xl ${colorClass} flex items-center justify-center`}>
-                                    <span className="text-sm font-semibold">
+                                <div className={`w-[30px] h-[30px] rounded-full ${colorClass} flex items-center justify-center`}>
+                                    <span className="text-[11px] font-medium">
                                         {initial}
                                     </span>
                                 </div>
                                 {isOnline && (
-                                    <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full ring-2 ring-white" />
+                                    <span className="absolute -bottom-px -right-px w-2 h-2 bg-[#4DAA57] rounded-full ring-[1.5px] ring-[#F7F6F3]" />
                                 )}
                             </div>
 
                             <div className="flex-1 min-w-0">
-                                <span className={`text-sm truncate block ${
-                                    unread > 0 ? 'font-semibold text-gray-900' : 'font-medium text-gray-600'
+                                <span className={`text-[13px] truncate block leading-tight ${
+                                    unread > 0 ? 'font-medium text-[#37352F]' : 'text-[#37352F]/70'
                                 }`}>
                                     {name}
                                 </span>
                                 {isOnline && (
-                                    <span className="text-xs text-emerald-500">Online</span>
+                                    <span className="text-[11px] text-[#9B9A97] leading-tight">Online</span>
                                 )}
                             </div>
 
                             {unread > 0 && (
-                                <span className="bg-gradient-to-r from-amber-400 to-orange-400 text-white text-xs font-semibold min-w-[22px] h-[22px] flex items-center justify-center rounded-full px-1.5 shrink-0 shadow-sm shadow-amber-200">
+                                <span className="bg-[#EB5757] text-white text-[10px] font-medium min-w-[18px] h-[18px] flex items-center justify-center rounded-full px-1 shrink-0">
                                     {unread}
                                 </span>
                             )}

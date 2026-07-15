@@ -17,67 +17,66 @@ const Navbar = ({ setOpened, opened, onlineList, typingUsers }: {
     const isTyping = opened ? typingUsers.has(opened.id) : false;
 
     return (
-        <div className="h-14 bg-white border-b border-gray-100 flex items-center justify-between px-5 shrink-0">
+        <div className="h-11 bg-white border-b border-[#F0F0EE] flex items-center justify-between px-5 shrink-0">
 
-            <div className="flex items-center gap-3 min-w-0">
+            <div className="flex items-center gap-2 min-w-0">
                 {opened ? (
-                    <div className="flex items-center gap-3 animate-fade-in">
+                    <div className="flex items-center gap-2 animate-fade-in">
                         <button
                             onClick={() => setOpened(null)}
-                            className="text-gray-400 hover:text-amber-500 transition-colors duration-200 p-1 -ml-1"
+                            className="text-[#B4B4B0] hover:text-[#37352F] transition-colors duration-100 p-0.5"
                             aria-label="Close chat"
                         >
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M12.5 5L7.5 10L12.5 15" />
                             </svg>
                         </button>
 
                         <div className="min-w-0">
-                            <div className="flex items-center gap-2">
-                                <span className="font-semibold text-gray-800 text-sm truncate">
+                            <div className="flex items-center gap-1.5">
+                                <span className="font-medium text-[#37352F] text-[13px] truncate">
                                     {openedName}
                                 </span>
                                 {isOnline ? (
-                                    <span className="inline-flex items-center gap-1 text-xs text-emerald-500 font-medium">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse-dot" />
-                                        Online
+                                    <span className="inline-flex items-center gap-1 text-[11px] text-[#4DAA57]">
+                                        <span className="w-[5px] h-[5px] rounded-full bg-[#4DAA57] animate-pulse-dot" />
                                     </span>
                                 ) : (
-                                    <span className="text-xs text-gray-400">Offline</span>
+                                    <span className="text-[11px] text-[#B4B4B0]">offline</span>
                                 )}
                             </div>
                             {isTyping && (
-                                <p className="text-xs text-amber-500 leading-tight font-medium">
+                                <p className="text-[11px] text-[#9B9A97] leading-none mt-px">
                                     typing...
                                 </p>
                             )}
                         </div>
                     </div>
                 ) : (
-                    <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-md bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center">
-                            <span className="text-[10px] font-bold text-white">S</span>
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-[18px] h-[18px] rounded bg-[#37352F] flex items-center justify-center">
+                            <span className="text-[8px] font-semibold text-white">S</span>
                         </div>
-                        <span className="font-semibold text-gray-800 text-sm">
+                        <span className="font-medium text-[#37352F] text-[13px]">
                             Sync
                         </span>
                     </div>
                 )}
             </div>
 
-            <div className="flex items-center gap-3">
-                <div className="hidden sm:flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-1.5">
-                    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center">
-                        <span className="text-[9px] font-bold text-white">
+            <div className="flex items-center gap-1.5">
+                <div className="hidden sm:flex items-center gap-1.5 px-1.5 py-1">
+                    <div className="w-[18px] h-[18px] rounded-full bg-[#EBEBEA] flex items-center justify-center">
+                        <span className="text-[8px] font-medium text-[#37352F]/60">
                             {user ? user.email.charAt(0).toUpperCase() : ''}
                         </span>
                     </div>
-                    <span className="text-xs font-medium text-gray-600">
+                    <span className="text-[12px] text-[#9B9A97]">
                         {user ? user.email.split('@')[0] : ''}
                     </span>
                 </div>
                 <button
-                    className="text-xs font-medium text-gray-400 hover:text-rose-500 transition-colors duration-200 px-2 py-1"
+                    className="text-[11px] text-[#B4B4B0] hover:text-[#37352F] transition-colors duration-100 px-1.5 py-0.5"
                     onClick={() => { logout(); setUser(null); navigate("/signin") }}
                 >
                     Log out

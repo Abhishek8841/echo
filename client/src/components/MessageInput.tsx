@@ -105,10 +105,10 @@ const MessageInput = ({ opened, appendMessage, setUserList }: {
     }
 
     return (
-        <div className="bg-white border-t border-gray-100 px-4 py-3 shrink-0">
+        <div className="border-t border-[#F0F0EE] px-5 py-2.5 shrink-0">
             <form
                 onSubmit={submitHandler}
-                className="flex gap-3 items-center"
+                className="flex gap-2 items-center"
             >
                 <input
                     type="text"
@@ -117,12 +117,12 @@ const MessageInput = ({ opened, appendMessage, setUserList }: {
                     onChange={changeHandler}
                     value={formData.content}
                     autoComplete="off"
-                    className="flex-1 bg-gray-50 text-sm rounded-xl px-4 py-2.5 border border-gray-100 outline-none placeholder:text-gray-400 focus:border-amber-300 focus:ring-2 focus:ring-amber-100 focus:bg-white transition-all duration-200"
+                    className="flex-1 bg-transparent text-[13.5px] text-[#37352F] px-1 py-1.5 outline-none placeholder:text-[#B4B4B0]"
                 />
 
                 <button
                     type="submit"
-                    className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-all duration-200 shadow-sm shadow-amber-200/50 hover:shadow-md hover:shadow-amber-300/50"
+                    className="bg-[#F4F3EF] hover:bg-[#EBEBEA] text-[#37352F] text-[12px] font-medium px-3.5 py-[6px] rounded-md transition-colors duration-100"
                 >
                     Send
                 </button>
