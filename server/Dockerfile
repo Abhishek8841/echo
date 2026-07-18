@@ -4,12 +4,12 @@ WORKDIR /sync/app
 
 COPY package*.json .
 COPY prisma .
+COPY . .
 
 RUN npm i
 RUN npx prisma generate
 RUN find src/generated -maxdepth 2 -type f
 
-COPY . .
 RUN npm run build
 
 EXPOSE 3000
