@@ -7,6 +7,7 @@ COPY prisma .
 
 RUN npm i
 RUN npx prisma generate
+RUN find src/generated -maxdepth 2 -type f
 
 COPY . .
 RUN npm run build
