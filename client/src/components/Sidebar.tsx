@@ -23,7 +23,7 @@ function getAvatarColor(id: string) {
 
 const Sidebar = ({ userList, setOpened, opened, onlineList, unreadCount, setUnreadCount }: {
     userList: UserType[],
-    setOpened: React.Dispatch<React.SetStateAction<UserType | null>>,
+    setOpened: (user: UserType | null) => void,
     opened: UserType | null,
     onlineList: Set<string>,
     unreadCount: Record<string, number>,
@@ -31,7 +31,7 @@ const Sidebar = ({ userList, setOpened, opened, onlineList, unreadCount, setUnre
 }) => {
 
     return (
-        <div className="w-[260px] bg-[#F7F6F3] h-screen flex flex-col shrink-0">
+        <div className="w-full bg-[#F7F6F3] h-full flex flex-col">
 
             <div className="h-14 px-4 flex items-center shrink-0">
                 <div className="flex items-center gap-2">

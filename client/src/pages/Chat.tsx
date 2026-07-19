@@ -8,6 +8,7 @@ import type { UserType } from '../types/auth.types';
 import Navbar from '../components/Navbar';
 import useMessage from '../hooks/useMessage';
 import useSocket from '../hooks/useSocket';
+import { useToast } from '../hooks/useToast';
 
 const Chat = () => {
     const [opened, setOpened] = useState<UserType | null>(null);
@@ -15,7 +16,9 @@ const Chat = () => {
     const [onlineList, setOnlineList] = useState<Set<string>>(new Set());
     const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
     const [unreadCount, setUnreadCount] = useState<Record<string, number>>({})
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const openedRef = useRef<UserType | null>(null);
+    const { addToast } = useToast();
 
     openedRef.current = opened;
     const { messages, fetchMessages, appendMessage, abortMessages, appendAndMarkMessageAsRead, receieveRead } = useMessage();
@@ -24,12 +27,12 @@ const Chat = () => {
     // userList
     useEffect(() => {
         getUsers().then(setUserList).catch(() => {
-            console.log("Not able to load the users")
+            addToast("Unable to load users", "error");
         })
     }, [])
     useEffect(() => {
         getUnreadList().then(setUnreadCount).catch(() => {
-            console.log("Unable to load unread count")
+            addToast("Unable to load unread messages", "error");
         })
     }, [])
 
@@ -103,17 +106,38 @@ const Chat = () => {
         }
     }
 
-    return (
-        <div className="h-screen flex">
+    // When a user is selected on mobile, close sidebar
+    function handleSetOpened(user: UserType | null) {
+        setOpened(user);
+        if (user) setSidebarOpen(false);
+    }
 
-            <Sidebar
-                userList={userList}
-                setOpened={setOpened}
-                opened={opened}
-                onlineList={onlineList}
-                unreadCount={unreadCount}
-                setUnreadCount={setUnreadCount}
-            />
+    return (
+        <div className="h-screen flex relative overflow-hidden">
+
+            {/* Mobile sidebar overlay */}
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/20 z-30 md:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
+
+            {/* Sidebar — always visible on md+, slide-over on mobile */}
+            <div className={`
+                fixed inset-y-0 left-0 z-40 w-[280px] transform transition-transform duration-200 ease-out
+                md:relative md:translate-x-0 md:z-auto md:w-[260px]
+                ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+            `}>
+                <Sidebar
+                    userList={userList}
+                    setOpened={handleSetOpened}
+                    opened={opened}
+                    onlineList={onlineList}
+                    unreadCount={unreadCount}
+                    setUnreadCount={setUnreadCount}
+                />
+            </div>
 
             <div className="flex flex-col flex-1 min-w-0">
 
@@ -122,6 +146,7 @@ const Chat = () => {
                     opened={opened}
                     onlineList={onlineList}
                     typingUsers={typingUsers}
+                    onMenuToggle={() => setSidebarOpen(prev => !prev)}
                 />
 
                 <MessageList

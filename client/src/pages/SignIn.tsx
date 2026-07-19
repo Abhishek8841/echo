@@ -4,11 +4,13 @@ import { signIn } from '../services/api';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '../hooks/useToast';
 
 const SignIn = () => {
     const { fetchUser } = useAuth();
     const navigate = useNavigate();
-
+    const { addToast } = useToast();
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState<SignInBody>({
         email: "",
@@ -29,17 +31,47 @@ const SignIn = () => {
     async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
+        // Validate inputs
+        if (!formData.email.trim()) {
+            addToast("Please enter your email address", "warning");
+            return;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email.trim())) {
+            addToast("Please enter a valid email address", "warning");
+            return;
+        }
+        if (!formData.password) {
+            addToast("Please enter your password", "warning");
+            return;
+        }
+
+        setLoading(true);
+
         try {
             await signIn(formData);
             await fetchUser();
+            addToast("Signed in successfully!", "success");
             navigate("/chat")
         } catch (e) {
             console.error(e);
 
             if (axios.isAxiosError(e)) {
-                console.log(e.response?.data.message)
-            };
+                const msg = e.response?.data?.message;
+                if (e.response?.status === 401) {
+                    addToast("Invalid credentials. Please check your email and password.", "error");
+                } else if (e.response?.status === 404) {
+                    addToast("Account not found. Please sign up first.", "error");
+                } else if (msg) {
+                    addToast(msg, "error");
+                } else {
+                    addToast("Sign in failed. Please try again.", "error");
+                }
+            } else {
+                addToast("Something went wrong. Please try again.", "error");
+            }
         } finally {
+            setLoading(false);
             setFormData({
                 email: "",
                 password: "",
@@ -48,11 +80,11 @@ const SignIn = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center px-4">
 
             <form
                 onSubmit={submitHandler}
-                className="animate-fade-in-up w-[320px] flex flex-col gap-3.5"
+                className="animate-fade-in-up w-full max-w-[320px] flex flex-col gap-3.5"
             >
 
                 <div className="mb-3">
@@ -88,9 +120,10 @@ const SignIn = () => {
                 </label>
 
                 <button
-                    className="bg-[#37352F] hover:bg-[#2F2D28] text-white py-[7px] rounded text-[13px] font-medium transition-colors duration-100 mt-1"
+                    disabled={loading}
+                    className="bg-[#37352F] hover:bg-[#2F2D28] disabled:opacity-50 text-white py-[7px] rounded text-[13px] font-medium transition-colors duration-100 mt-1"
                 >
-                    Continue
+                    {loading ? 'Signing in...' : 'Continue'}
                 </button>
 
                 <p className="text-[12px] text-center text-[#B4B4B0] mt-0.5">

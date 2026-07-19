@@ -13,8 +13,8 @@ const MessageList = ({ messages, opened }: { messages: MessagesType, opened: Use
 
     if (!user || !opened) {
         return (
-            <div className="flex-1 flex items-center justify-center">
-                <p className="text-[13px] text-[#B4B4B0] animate-fade-in-up">
+            <div className="flex-1 flex items-center justify-center px-4">
+                <p className="text-[13px] text-[#B4B4B0] animate-fade-in-up text-center">
                     Select a conversation
                 </p>
             </div>
@@ -22,7 +22,7 @@ const MessageList = ({ messages, opened }: { messages: MessagesType, opened: Use
     }
 
     return (
-        <div className="flex-1 overflow-y-auto px-5 py-4">
+        <div className="flex-1 overflow-y-auto px-3 sm:px-5 py-4">
 
             <div className="flex flex-col gap-px">
                 {messages.map((message) => {
@@ -34,7 +34,7 @@ const MessageList = ({ messages, opened }: { messages: MessagesType, opened: Use
                             className={`flex flex-col mb-2 ${isSent ? 'items-end animate-slide-right' : 'items-start animate-slide-left'}`}
                         >
                             <div
-                                className={`max-w-[60%] px-3 py-[7px] ${
+                                className={`max-w-[85%] sm:max-w-[60%] px-3 py-[7px] ${
                                     isSent
                                         ? 'bg-[#F4F3EF] text-[#37352F] rounded-[14px] rounded-br-sm'
                                         : 'bg-white ring-1 ring-[#EBEBEA] text-[#37352F] rounded-[14px] rounded-bl-sm'

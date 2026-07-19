@@ -2,24 +2,49 @@ import { useNavigate } from 'react-router-dom'
 import { logout } from '../services/api'
 import type { UserType } from '../types/auth.types'
 import { useAuth } from '../hooks/useAuth'
+import { useToast } from '../hooks/useToast'
 
-const Navbar = ({ setOpened, opened, onlineList, typingUsers }: {
+const Navbar = ({ setOpened, opened, onlineList, typingUsers, onMenuToggle }: {
     setOpened: React.Dispatch<React.SetStateAction<UserType | null>>,
     opened: UserType | null,
     onlineList: Set<string>,
     typingUsers: Set<string>,
+    onMenuToggle: () => void,
 }) => {
     const { user, setUser } = useAuth();
     const navigate = useNavigate();
+    const { addToast } = useToast();
 
     const openedName = opened ? opened.email.split('@')[0] : null;
     const isOnline = opened ? onlineList.has(opened.id) : false;
     const isTyping = opened ? typingUsers.has(opened.id) : false;
 
+    async function handleLogout() {
+        try {
+            await logout();
+            setUser(null);
+            addToast("Logged out successfully", "info");
+            navigate("/signin");
+        } catch {
+            addToast("Failed to log out. Please try again.", "error");
+        }
+    }
+
     return (
-        <div className="h-11 bg-white border-b border-[#F0F0EE] flex items-center justify-between px-5 shrink-0">
+        <div className="h-11 bg-white border-b border-[#F0F0EE] flex items-center justify-between px-3 sm:px-5 shrink-0">
 
             <div className="flex items-center gap-2 min-w-0">
+                {/* Hamburger menu — mobile only */}
+                <button
+                    onClick={onMenuToggle}
+                    className="md:hidden text-[#9B9A97] hover:text-[#37352F] transition-colors duration-100 p-1 -ml-1"
+                    aria-label="Toggle sidebar"
+                >
+                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                        <path d="M4 6h12M4 10h12M4 14h12" />
+                    </svg>
+                </button>
+
                 {opened ? (
                     <div className="flex items-center gap-2 animate-fade-in">
                         <button
@@ -77,7 +102,7 @@ const Navbar = ({ setOpened, opened, onlineList, typingUsers }: {
                 </div>
                 <button
                     className="text-[11px] text-[#B4B4B0] hover:text-[#37352F] transition-colors duration-100 px-1.5 py-0.5"
-                    onClick={() => { logout(); setUser(null); navigate("/signin") }}
+                    onClick={handleLogout}
                 >
                     Log out
                 </button>

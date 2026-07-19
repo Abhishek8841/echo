@@ -3,6 +3,7 @@ import type { singleMessageType } from "../types/message.types";
 import { sendMessage, sendStartTyping, sendStopTyping } from "../services/websocket";
 import type { UserType } from "../types/auth.types";
 import { useAuth } from "../hooks/useAuth";
+import { useToast } from "../hooks/useToast";
 
 const MessageInput = ({ opened, appendMessage, setUserList }: {
     opened: UserType | null,
@@ -10,6 +11,7 @@ const MessageInput = ({ opened, appendMessage, setUserList }: {
     setUserList: React.Dispatch<React.SetStateAction<UserType[]>>
 }) => {
     const { user } = useAuth();
+    const { addToast } = useToast();
     const [formData, setFormData] = useState({
         content: ""
     })
@@ -61,6 +63,11 @@ const MessageInput = ({ opened, appendMessage, setUserList }: {
             return;
         }
 
+        if (!formData.content.trim()) {
+            addToast("Cannot send an empty message", "warning");
+            return;
+        }
+
         if (typingRef.current) {
             sendStopTyping(opened.id);
             typingRef.current = false;
@@ -97,7 +104,7 @@ const MessageInput = ({ opened, appendMessage, setUserList }: {
 
 
         } catch (e) {
-            console.log("error");
+            addToast("Failed to send message", "error");
         }
         setFormData({
             content: ""
@@ -105,7 +112,7 @@ const MessageInput = ({ opened, appendMessage, setUserList }: {
     }
 
     return (
-        <div className="border-t border-[#F0F0EE] px-5 py-2.5 shrink-0">
+        <div className="border-t border-[#F0F0EE] px-3 sm:px-5 py-2.5 shrink-0">
             <form
                 onSubmit={submitHandler}
                 className="flex gap-2 items-center"
@@ -117,12 +124,12 @@ const MessageInput = ({ opened, appendMessage, setUserList }: {
                     onChange={changeHandler}
                     value={formData.content}
                     autoComplete="off"
-                    className="flex-1 bg-transparent text-[13.5px] text-[#37352F] px-1 py-1.5 outline-none placeholder:text-[#B4B4B0]"
+                    className="flex-1 bg-transparent text-[13.5px] text-[#37352F] px-1 py-1.5 outline-none placeholder:text-[#B4B4B0] min-w-0"
                 />
 
                 <button
                     type="submit"
-                    className="bg-[#F4F3EF] hover:bg-[#EBEBEA] text-[#37352F] text-[12px] font-medium px-3.5 py-[6px] rounded-md transition-colors duration-100"
+                    className="bg-[#F4F3EF] hover:bg-[#EBEBEA] text-[#37352F] text-[12px] font-medium px-3.5 py-[6px] rounded-md transition-colors duration-100 shrink-0"
                 >
                     Send
                 </button>
