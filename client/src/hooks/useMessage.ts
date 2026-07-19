@@ -18,7 +18,8 @@ const useMessage = () => {
         }
         catch (error: any) {
             if (error.name === "AbortError") return;
-            alert("Unable to load the conversation");
+            // alert("Unable to load the conversation");
+            console.log("Unable to load the conversation");
             console.error(error);
         }
     }

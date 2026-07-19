@@ -24,12 +24,12 @@ const Chat = () => {
     // userList
     useEffect(() => {
         getUsers().then(setUserList).catch(() => {
-            alert("Not able to load the users")
+            console.log("Not able to load the users")
         })
     }, [])
     useEffect(() => {
         getUnreadList().then(setUnreadCount).catch(() => {
-            alert("Unable to load unread count")
+            console.log("Unable to load unread count")
         })
     }, [])
 

@@ -36,7 +36,7 @@ const SignUp = () => {
             console.error(e);
 
             if (axios.isAxiosError(e)) {
-                alert(e.response?.data.message)
+                console.log(e.response?.data.message)
             };
         } finally {
             setFormData({
