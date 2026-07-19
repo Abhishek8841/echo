@@ -113,7 +113,7 @@ const Chat = () => {
     }
 
     return (
-        <div className="h-screen flex relative overflow-hidden">
+        <div className="h-dvh flex relative overflow-hidden">
 
             {/* Mobile sidebar overlay */}
             {sidebarOpen && (
